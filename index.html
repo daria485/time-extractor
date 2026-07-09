@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Time extractor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <div>
+            <h1>Time extractor</h1>
+            <p>Расчёт активного времени сотрудников в чатах 1С-Коннект</p>
+        </div>
+    </header>
+
+    <section class="panel">
+        <h2>1. Источник данных</h2>
+
+        <div class="tabs">
+            <button class="tab active" id="tabFile" type="button">Загрузить JSON-файл</button>
+            <button class="tab" id="tabHttp" type="button">Загрузить из 1С HTTP-сервиса</button>
+        </div>
+
+        <div id="fileSourceBlock" class="source-block">
+            <div class="upload-box">
+                <input type="file" id="fileInput" accept=".json">
+                <p>
+                    Поддерживается выгрузка формата 1С-Коннект с массивом <b>Dialogs</b>.
+                </p>
+            </div>
+        </div>
+
+        <div id="httpSourceBlock" class="source-block" hidden>
+            <div class="settings-grid http-grid">
+
+                <label>
+                    URL HTTP-сервиса
+                    <input
+                        type="text"
+                        id="apiUrl"
+                        value="https://beta.altapp.ru/31NE53HZ/hs/gpt/dialogs"
+                    >
+                </label>
+
+                <label>
+                    Дата с
+                    <input type="date" id="dateFrom">
+                </label>
+
+                <label>
+                    Дата по
+                    <input type="date" id="dateTo">
+                </label>
+
+                <label>
+                    Линия
+                    <select id="dialogLine"></select>
+                </label>
+
+                <label>
+                    Логин
+                    <input type="text" id="apiLogin" autocomplete="username">
+                </label>
+
+                <label>
+                    Пароль
+                    <input type="password" id="apiPassword" autocomplete="current-password">
+                </label>
+
+            </div>
+
+            <div class="actions">
+                <button id="loadHttpBtn" type="button">Загрузить данные из 1С</button>
+            </div>
+
+            <p class="hint">
+                Программа отправляет GET-запрос к HTTP-сервису 1С с параметрами:
+                <b>line</b>, <b>StartDate</b>, <b>EndDate</b>.
+                Даты автоматически преобразуются в формат <b>ГГГГ.ММ.ДД</b>.
+                Логин и пароль используются только для текущего запроса и не сохраняются в коде.
+            </p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>2. Настройки расчёта</h2>
+
+        <div class="settings-grid">
+
+            <label>
+                Компания сотрудников
+                <input type="text" id="employeeCompany" value="ООО Селекта Сервис">
+            </label>
+
+            <label>
+                Максимальный активный интервал, минут
+                <input type="number" id="maxInterval" value="15" min="1" max="120">
+            </label>
+
+            <label>
+                Минимум на сообщение, секунд
+                <input type="number" id="minMessageTime" value="30" min="0" max="300">
+            </label>
+
+            <label>
+                Учитывать сообщения специалиста-инициатора
+                <select id="includeSpecialistInitiated">
+                    <option value="yes" selected>Да</option>
+                    <option value="no">Нет</option>
+                </select>
+            </label>
+
+        </div>
+
+        <div class="actions">
+            <button id="analyzeBtn" disabled>Посчитать время</button>
+            <button id="exportBtn" disabled>Скачать CSV</button>
+        </div>
+    </section>
+
+    <section class="panel" id="employeesPanel" hidden>
+        <h2>3. Сотрудники за выбранный период</h2>
+
+        <p class="hint">
+            Программа определила сотрудников по сообщениям, где компания автора совпадает с указанной компанией сотрудников.
+            Отметьте только тех сотрудников, которых нужно включить в расчёт.
+        </p>
+
+        <div class="employee-actions">
+            <button id="selectAllEmployeesBtn" type="button">Выбрать всех</button>
+            <button id="clearEmployeesBtn" type="button">Снять выбор</button>
+        </div>
+
+        <div id="employeesList" class="employees-list"></div>
+    </section>
+
+    <section class="summary" id="summary" hidden>
+        <div class="summary-card">
+            <span>Диалогов в данных</span>
+            <b id="totalDialogs">0</b>
+        </div>
+
+        <div class="summary-card">
+            <span>Диалогов с участием выбранных сотрудников</span>
+            <b id="employeeDialogs">0</b>
+        </div>
+
+        <div class="summary-card">
+            <span>Сообщений выбранных сотрудников</span>
+            <b id="employeeMessages">0</b>
+        </div>
+
+        <div class="summary-card">
+            <span>Расчётное время</span>
+            <b id="totalTime">0 ч 0 мин</b>
+        </div>
+    </section>
+
+    <section class="panel" id="resultsPanel" hidden>
+        <h2>4. Результат по сотрудникам</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Сотрудник</th>
+                        <th>Диалогов</th>
+                        <th>Сообщений</th>
+                        <th>Активное время</th>
+                        <th>Среднее на диалог</th>
+                        <th>Среднее на сообщение</th>
+                        <th>Диалоги</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="panel muted">
+        <h2>Как рассчитывается время</h2>
+
+        <p>
+            Time extractor считает не фактическое время, которое сотрудник провёл за компьютером,
+            а <b>расчётное активное время работы с обращениями</b>. Это оценка времени, которое сотрудник
+            мог потратить на чтение сообщения, анализ ситуации, подготовку ответа и отправку сообщения в чат.
+        </p>
+
+        <p>
+            Расчёт выполняется по каждому сообщению выбранного сотрудника. Программа находит предыдущее
+            несистемное сообщение в этом же диалоге и считает промежуток времени до ответа сотрудника.
+        </p>
+
+        <p>
+            Например: если партнёр написал в 10:00, а сотрудник ответил в 10:03, то в активное время сотрудника
+            попадёт 3 минуты. Если сотрудник ответил сразу несколькими сообщениями, каждое сообщение также
+            учитывается в расчёте.
+        </p>
+
+        <p>
+            Чтобы расчёт не завышался, длинные паузы ограничиваются лимитом. По умолчанию максимальный активный
+            интервал — <b>10 минут</b>. Если между сообщением партнёра и ответом сотрудника прошло 40 минут,
+            программа засчитает не 40 минут, а только 10 минут.
+        </p>
+
+        <p>
+            Это ограничение нужно потому, что длинный промежуток между сообщениями не всегда означает работу
+            сотрудника в чате. В это время обращение могло ожидать в очереди, сотрудник мог выполнять техническое
+            действие вне чата, ждать ответа партнёра, заниматься другим обращением или вернуться к диалогу позже.
+        </p>
+
+        <p>
+            Также задан минимальный порог на одно сообщение. По умолчанию — <b>30 секунд</b>. Он нужен для случаев,
+            когда сообщения идут почти подряд, но сотрудник всё равно тратит время на чтение, ввод текста и отправку ответа.
+        </p>
+
+        <p>
+            Системные сообщения в расчёт не попадают. Например: поступление обращения в очередь, нерабочее время,
+            передача файла через чат, начало обращения, автоматическое закрытие и завершение работы специалиста.
+        </p>
+
+        <p>
+            Если в одном диалоге отвечали несколько сотрудников, время распределяется между ними по авторам сообщений.
+            То есть сообщение Анны учитывается в времени Анны, сообщение Михаила — в времени Михаила.
+        </p>
+
+        <p>
+            Итоговый показатель можно использовать для оценки нагрузки сотрудников в чатах, сравнения месяцев,
+            анализа распределения обращений и расчёта доли чатов в общем рабочем времени.
+        </p>
+    </section>
+
+</div>
+
+<div class="modal-overlay" id="dialogsModal" hidden>
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <h2 id="dialogsModalTitle">Диалоги сотрудника</h2>
+                <p id="dialogsModalSubtitle"></p>
+            </div>
+            <button class="modal-close" id="closeDialogsModal" type="button">×</button>
+        </div>
+
+        <div class="modal-body" id="dialogsModalBody"></div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
