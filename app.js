@@ -270,7 +270,7 @@ async function loadDataByHttp() {
     loadHttpBtn.textContent = "Загружаю данные...";
 
     try {
-        const response = await fetch("http://127.0.0.1:3000/api/dialogs", {
+        const response = await fetch("https://time-extractor-proxy.onrender.com/api/dialogs", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
