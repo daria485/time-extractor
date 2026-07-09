@@ -1,0 +1,10 @@
+﻿{
+  "name": "time-extractor",
+  "version": "1.0.0",
+  "description": "Time extractor proxy for 1C Connect dialogs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "private": true
+}
