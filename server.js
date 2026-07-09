@@ -7,7 +7,7 @@ const http = require("http");
 const https = require("https");
 const { URL } = require("url");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const server = http.createServer(async (req, res) => {
     setCorsHeaders(res);
@@ -57,8 +57,8 @@ const server = http.createServer(async (req, res) => {
     }));
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-    console.log(`Time extractor proxy запущен: http://127.0.0.1:${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Time extractor proxy запущен на порту ${PORT}`);
 });
 
 function setCorsHeaders(res) {
