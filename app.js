@@ -348,6 +348,8 @@ function resetData() {
     summary.hidden = true;
     resultsPanel.hidden = true;
     resultBody.innerHTML = "";
+
+    notifyChatAnalysisUpdated();
 }
 
 // ===============================
@@ -650,6 +652,21 @@ function runAnalysis() {
     summary.hidden = false;
     resultsPanel.hidden = false;
     exportBtn.disabled = analysisResult.length === 0;
+
+    notifyChatAnalysisUpdated();
+}
+
+function notifyChatAnalysisUpdated() {
+    window.dispatchEvent(
+        new CustomEvent("chat-analysis-updated", {
+            detail: {
+                results: analysisResult.map(item => ({
+                    employee: item.employee,
+                    activeMs: item.activeMs
+                }))
+            }
+        })
+    );
 }
 
 // ===============================
