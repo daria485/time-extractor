@@ -76,7 +76,6 @@ const exportBtn = document.getElementById("exportBtn");
 const employeeCompanyInput = document.getElementById("employeeCompany");
 const maxIntervalInput = document.getElementById("maxInterval");
 const minMessageTimeInput = document.getElementById("minMessageTime");
-const includeSpecialistInitiatedInput = document.getElementById("includeSpecialistInitiated");
 
 const employeesPanel = document.getElementById("employeesPanel");
 const employeesList = document.getElementById("employeesList");
@@ -89,7 +88,7 @@ const resultBody = document.getElementById("resultBody");
 
 const totalDialogsEl = document.getElementById("totalDialogs");
 const employeeDialogsEl = document.getElementById("employeeDialogs");
-const employeeMessagesEl = document.getElementById("employeeMessages");
+const employeeResponsesEl = document.getElementById("employeeResponses");
 const totalTimeEl = document.getElementById("totalTime");
 
 const dialogsModal = document.getElementById("dialogsModal");
@@ -435,6 +434,7 @@ function renderEmployeesList(employees) {
         checkbox.checked = true;
 
         const textWrapper = document.createElement("span");
+        textWrapper.className = "employee-info";
 
         const name = document.createElement("span");
         name.className = "employee-name";
@@ -500,25 +500,49 @@ function runAnalysis() {
     const selectedEmployeesSet = new Set(selectedEmployees);
 
     const employeeCompany = normalizeText(employeeCompanyInput.value);
-    const maxIntervalMinutes = Number(maxIntervalInput.value) || 15;
-    const minMessageSeconds = Number(minMessageTimeInput.value) || 0;
-    const includeSpecialistInitiated = includeSpecialistInitiatedInput.value === "yes";
+    const maxIntervalMinutes = Number(maxIntervalInput.value);
+    const minMessageSeconds = Number(minMessageTimeInput.value);
+
+    if (
+        !Number.isFinite(maxIntervalMinutes) ||
+        maxIntervalMinutes <= 0 ||
+        maxIntervalMinutes > 120
+    ) {
+        alert("Максимальный активный интервал должен быть от 1 до 120 минут.");
+        return;
+    }
+
+    if (
+        !Number.isFinite(minMessageSeconds) ||
+        minMessageSeconds < 0 ||
+        minMessageSeconds > 300
+    ) {
+        alert("Минимальное время на ответ должно быть от 0 до 300 секунд.");
+        return;
+    }
 
     const maxIntervalMs = maxIntervalMinutes * 60 * 1000;
-    const minMessageMs = minMessageSeconds * 1000;
+    const minResponseMs = minMessageSeconds * 1000;
+
+    if (minResponseMs > maxIntervalMs) {
+        alert(
+            "Минимальное время на ответ не может быть больше максимального активного интервала."
+        );
+        return;
+    }
 
     const employees = {};
     const allDialogs = rawData.Dialogs;
 
-    let totalEmployeeMessages = 0;
+    let totalEmployeeResponses = 0;
     const dialogsWithEmployees = new Set();
 
-    allDialogs.forEach(dialog => {
+    allDialogs.forEach((dialog, dialogIndex) => {
         if (!dialog.DialogContent || !Array.isArray(dialog.DialogContent)) {
             return;
         }
 
-        const dialogId = dialog.DialogID || "Без ID";
+        const dialogId = dialog.DialogID || `Без ID — диалог ${dialogIndex + 1}`;
         const dialogLine = dialog.DialogLine || "";
 
         const messages = dialog.DialogContent
@@ -526,81 +550,90 @@ function runAnalysis() {
             .filter(message => message.date)
             .sort((a, b) => a.date - b.date);
 
-        const nonSystemMessages = messages.filter(message => !message.isSystem);
+        const responseEvents = buildResponseEvents(
+            messages,
+            employeeCompany,
+            minResponseMs,
+            maxIntervalMs
+        );
 
-        if (nonSystemMessages.length === 0) {
-            return;
-        }
-
-        const isSpecialistInitiated = checkSpecialistInitiated(messages);
-
-        if (isSpecialistInitiated && !includeSpecialistInitiated) {
-            return;
-        }
-
-        for (let i = 0; i < nonSystemMessages.length; i++) {
-            const currentMessage = nonSystemMessages[i];
-
-            if (!isEmployeeMessage(currentMessage, employeeCompany)) {
-                continue;
+        responseEvents.forEach(event => {
+            if (!event.isCounted) {
+                return;
             }
 
-            const employeeName = currentMessage.author || "Неизвестный сотрудник";
+            const employeeName =
+                event.responseMessage.author || "Неизвестный сотрудник";
 
             if (!selectedEmployeesSet.has(employeeName)) {
-                continue;
+                return;
             }
 
             if (!employees[employeeName]) {
                 employees[employeeName] = {
                     employee: employeeName,
                     dialogs: new Set(),
-                    messages: 0,
+                    responses: 0,
                     activeMs: 0,
-                    lines: new Set()
+                    lines: new Set(),
+                    dialogIndexes: new Set(),
+                    dialogStats: new Map()
                 };
             }
 
             employees[employeeName].dialogs.add(dialogId);
             employees[employeeName].lines.add(dialogLine);
+            employees[employeeName].dialogIndexes.add(dialogIndex);
             dialogsWithEmployees.add(dialogId);
-            totalEmployeeMessages++;
+            totalEmployeeResponses++;
 
-            employees[employeeName].messages++;
+            employees[employeeName].responses++;
+            employees[employeeName].activeMs += event.activeMs;
 
-            const previousMessage = findPreviousNonSystemMessage(nonSystemMessages, i);
-
-            let calculatedMs = minMessageMs;
-
-            if (previousMessage) {
-                const diffMs = currentMessage.date - previousMessage.date;
-
-                if (diffMs > 0) {
-                    calculatedMs = Math.min(diffMs, maxIntervalMs);
-                    calculatedMs = Math.max(calculatedMs, minMessageMs);
-                }
+            if (!employees[employeeName].dialogStats.has(dialogIndex)) {
+                employees[employeeName].dialogStats.set(dialogIndex, {
+                    responsesCount: 0,
+                    activeMs: 0,
+                    responseDates: []
+                });
             }
 
-            employees[employeeName].activeMs += calculatedMs;
-        }
+            const dialogStat =
+                employees[employeeName].dialogStats.get(dialogIndex);
+
+            dialogStat.responsesCount++;
+            dialogStat.activeMs += event.activeMs;
+            dialogStat.responseDates.push(
+                event.responseMessage.date.getTime()
+            );
+        });
     });
 
     analysisResult = Object.values(employees)
         .map(employee => {
             const dialogsCount = employee.dialogs.size;
-            const messagesCount = employee.messages;
+            const responsesCount = employee.responses;
             const activeMs = employee.activeMs;
 
             return {
                 employee: employee.employee,
                 dialogsCount,
-                messagesCount,
+                responsesCount,
                 activeMs,
                 activeMinutes: activeMs / 1000 / 60,
                 averagePerDialogMs: dialogsCount > 0 ? activeMs / dialogsCount : 0,
-                averagePerMessageMs: messagesCount > 0 ? activeMs / messagesCount : 0,
+                averagePerResponseMs:
+                    responsesCount > 0 ? activeMs / responsesCount : 0,
                 lines: Array.from(employee.lines).filter(Boolean).join(", "),
-                dialogIds: Array.from(employee.dialogs)
+                dialogIds: Array.from(employee.dialogs),
+                dialogIndexes: Array.from(employee.dialogIndexes),
+                dialogStats: Array.from(employee.dialogStats.entries())
+                    .map(([dialogIndex, stat]) => ({
+                        dialogIndex,
+                        responsesCount: stat.responsesCount,
+                        activeMs: stat.activeMs,
+                        responseDates: stat.responseDates
+                    }))
             };
         })
         .sort((a, b) => b.activeMs - a.activeMs);
@@ -608,7 +641,7 @@ function runAnalysis() {
     renderSummary({
         totalDialogs: allDialogs.length,
         employeeDialogs: dialogsWithEmployees.size,
-        employeeMessages: totalEmployeeMessages,
+        employeeResponses: totalEmployeeResponses,
         totalActiveMs: analysisResult.reduce((sum, item) => sum + item.activeMs, 0)
     });
 
@@ -667,28 +700,58 @@ function isEmployeeMessage(message, employeeCompany) {
     return normalizeText(message.company) === employeeCompany;
 }
 
-function findPreviousNonSystemMessage(messages, currentIndex) {
-    if (currentIndex <= 0) {
-        return null;
-    }
+function buildResponseEvents(
+    messages,
+    employeeCompany,
+    minResponseMs,
+    maxIntervalMs
+) {
+    const events = [];
+    let lastClientMessage = null;
 
-    return messages[currentIndex - 1];
-}
+    messages
+        .filter(message => !message.isSystem)
+        .forEach(message => {
+            const isEmployee = isEmployeeMessage(
+                message,
+                employeeCompany
+            );
 
-function checkSpecialistInitiated(messages) {
-    const startMessage = messages.find(message => {
-        return message.isSystem &&
-            message.text &&
-            message.text.toLowerCase().includes("начало обращения");
-    });
+            if (!isEmployee) {
+                // Последовательные сообщения 1-й линии образуют один вопрос.
+                // Точка отсчёта — последнее сообщение перед ответом 2-й линии.
+                lastClientMessage = message;
+                return;
+            }
 
-    if (!startMessage) {
-        return false;
-    }
+            // Сообщения 2-й линии без предшествующего вопроса не учитываются.
+            // После первого ответа следующие сообщения сотрудника также
+            // не создают новые расчётные интервалы.
+            if (!lastClientMessage) {
+                return;
+            }
 
-    const text = startMessage.text.toLowerCase();
+            const responseDelayMs =
+                message.date - lastClientMessage.date;
 
-    return text.includes("инициатор специалист");
+            const isValidDelay =
+                responseDelayMs >= 0 &&
+                responseDelayMs <= maxIntervalMs;
+
+            events.push({
+                clientMessage: lastClientMessage,
+                responseMessage: message,
+                responseDelayMs,
+                isCounted: isValidDelay,
+                activeMs: isValidDelay
+                    ? Math.max(responseDelayMs, minResponseMs)
+                    : 0
+            });
+
+            lastClientMessage = null;
+        });
+
+    return events;
 }
 
 // ===============================
@@ -698,7 +761,7 @@ function checkSpecialistInitiated(messages) {
 function renderSummary(data) {
     totalDialogsEl.textContent = data.totalDialogs;
     employeeDialogsEl.textContent = data.employeeDialogs;
-    employeeMessagesEl.textContent = data.employeeMessages;
+    employeeResponsesEl.textContent = data.employeeResponses;
     totalTimeEl.textContent = formatDuration(data.totalActiveMs);
 }
 
@@ -720,10 +783,10 @@ function renderTable(rows) {
         tr.innerHTML = `
             <td>${escapeHtml(row.employee)}</td>
             <td>${row.dialogsCount}</td>
-            <td>${row.messagesCount}</td>
+            <td>${row.responsesCount}</td>
             <td>${formatDuration(row.activeMs)}</td>
             <td>${formatDuration(row.averagePerDialogMs)}</td>
-            <td>${formatDuration(row.averagePerMessageMs)}</td>
+            <td>${formatDuration(row.averagePerResponseMs)}</td>
             <td>
                 <button 
                     type="button" 
@@ -775,11 +838,37 @@ function openReadableDialogsModal(employeeName) {
         return;
     }
 
-    const employeeCompany = normalizeText(employeeCompanyInput.value);
+    const employeeCompany =
+        normalizeText(employeeCompanyInput.value);
+
+    const employeeResult = analysisResult.find(
+        item => item.employee === employeeName
+    );
+
+    if (!employeeResult) {
+        alert(
+            "Для сотрудника нет актуального результата. Повторно запустите расчёт."
+        );
+        return;
+    }
+
+    const dialogStatsByIndex = new Map(
+        employeeResult.dialogStats.map(stat => [
+            stat.dialogIndex,
+            stat
+        ])
+    );
 
     const dialogs = rawData.Dialogs
-        .filter(dialog => dialogHasEmployeeMessages(dialog, employeeName, employeeCompany))
-        .map(dialog => {
+        .map((dialog, dialogIndex) => ({
+            dialog,
+            dialogIndex
+        }))
+        .filter(item =>
+            dialogStatsByIndex.has(item.dialogIndex)
+        )
+        .map(item => {
+            const { dialog, dialogIndex } = item;
             const messages = Array.isArray(dialog.DialogContent)
                 ? dialog.DialogContent
                     .map(message => normalizeMessage(message))
@@ -787,18 +876,19 @@ function openReadableDialogsModal(employeeName) {
                     .sort((a, b) => a.date - b.date)
                 : [];
 
-            const employeeMessagesCount = messages.filter(message => {
-                return !message.isSystem &&
-                    message.author === employeeName &&
-                    isEmployeeMessage(message, employeeCompany);
-            }).length;
+            const dialogStat =
+                dialogStatsByIndex.get(dialogIndex);
 
             return {
-                id: dialog.DialogID || "Без ID",
+                id:
+                    dialog.DialogID ||
+                    `Без ID — диалог ${dialogIndex + 1}`,
                 author: dialog.DialogAuthor || "Автор не указан",
                 line: dialog.DialogLine || "Линия не указана",
                 messages,
-                employeeMessagesCount
+                responsesCount: dialogStat.responsesCount,
+                activeMs: dialogStat.activeMs,
+                responseDates: new Set(dialogStat.responseDates)
             };
         })
         .sort((a, b) => {
@@ -807,12 +897,11 @@ function openReadableDialogsModal(employeeName) {
             return firstDateA - firstDateB;
         });
 
-    const employeeMessagesTotal = dialogs.reduce((sum, dialog) => {
-        return sum + dialog.employeeMessagesCount;
-    }, 0);
-
     dialogsModalTitle.textContent = `Диалоги: ${employeeName}`;
-    dialogsModalSubtitle.textContent = `${dialogs.length} диалогов, ${employeeMessagesTotal} сообщений сотрудника`;
+    dialogsModalSubtitle.textContent =
+        `${employeeResult.dialogsCount} диалогов, ` +
+        `${employeeResult.responsesCount} учтённых ответов, ` +
+        `${formatDuration(employeeResult.activeMs)}`;
 
     dialogsModalBody.innerHTML = "";
 
@@ -842,7 +931,8 @@ function openReadableDialogsModal(employeeName) {
             <div><b>Линия:</b> ${escapeHtml(dialog.line)}</div>
             <div><b>Автор диалога:</b> ${escapeHtml(dialog.author)}</div>
             <div><b>Период сообщений:</b> ${escapeHtml(getDialogPeriodText(dialog.messages))}</div>
-            <div><b>Сообщений сотрудника в этом диалоге:</b> ${dialog.employeeMessagesCount}</div>
+            <div><b>Учтённых ответов сотрудника:</b> ${dialog.responsesCount}</div>
+            <div><b>Расчётное время:</b> ${escapeHtml(formatDuration(dialog.activeMs))}</div>
         `;
 
         header.appendChild(title);
@@ -853,14 +943,15 @@ function openReadableDialogsModal(employeeName) {
 
         dialog.messages.forEach(message => {
             const role = getMessageRole(message, employeeCompany);
-            const isSelectedEmployeeMessage = !message.isSystem &&
+            const isCountedResponse = !message.isSystem &&
                 message.author === employeeName &&
-                isEmployeeMessage(message, employeeCompany);
+                isEmployeeMessage(message, employeeCompany) &&
+                dialog.responseDates.has(message.date.getTime());
 
             const row = document.createElement("div");
             row.className = `message-row ${role.type === "system" ? "system-message" : ""}`;
 
-            if (isSelectedEmployeeMessage) {
+            if (isCountedResponse) {
                 row.classList.add("selected-employee-message");
             }
 
@@ -873,7 +964,9 @@ function openReadableDialogsModal(employeeName) {
 
             const roleBadge = document.createElement("span");
             roleBadge.className = `message-role ${role.className}`;
-            roleBadge.textContent = isSelectedEmployeeMessage ? "Выбранный сотрудник" : role.label;
+            roleBadge.textContent = isCountedResponse
+                ? "Учтённый ответ"
+                : role.label;
 
             const authorName = document.createElement("span");
             authorName.className = "author-name";
@@ -900,20 +993,6 @@ function openReadableDialogsModal(employeeName) {
     });
 
     dialogsModal.hidden = false;
-}
-
-function dialogHasEmployeeMessages(dialog, employeeName, employeeCompany) {
-    if (!dialog || !Array.isArray(dialog.DialogContent)) {
-        return false;
-    }
-
-    return dialog.DialogContent.some(message => {
-        const normalizedMessage = normalizeMessage(message);
-
-        return !normalizedMessage.isSystem &&
-            normalizedMessage.author === employeeName &&
-            isEmployeeMessage(normalizedMessage, employeeCompany);
-    });
 }
 
 function closeReadableDialogsModal() {
@@ -998,11 +1077,11 @@ function exportCsv() {
     rows.push([
         "Сотрудник",
         "Диалогов",
-        "Сообщений",
+        "Учтённых ответов",
         "Активное время, минут",
         "Активное время",
         "Среднее на диалог, минут",
-        "Среднее на сообщение, минут",
+        "Среднее на ответ, минут",
         "Линии"
     ]);
 
@@ -1010,11 +1089,11 @@ function exportCsv() {
         rows.push([
             row.employee,
             row.dialogsCount,
-            row.messagesCount,
+            row.responsesCount,
             roundNumber(row.activeMinutes),
             formatDuration(row.activeMs),
             roundNumber(row.averagePerDialogMs / 1000 / 60),
-            roundNumber(row.averagePerMessageMs / 1000 / 60),
+            roundNumber(row.averagePerResponseMs / 1000 / 60),
             row.lines
         ]);
     });
