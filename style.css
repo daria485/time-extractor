@@ -329,59 +329,25 @@ tr:hover td {
 }
 
 .ticket-status.success {
+    color: #065f46;
     background: #ecfdf3;
     border: 1px solid #a7f3d0;
-    color: #065f46;
 }
 
 .ticket-status.warning {
+    color: #92400e;
     background: #fffbeb;
     border: 1px solid #fde68a;
-    color: #92400e;
 }
 
 .ticket-status.error {
+    color: #991b1b;
     background: #fef2f2;
     border: 1px solid #fecaca;
-    color: #991b1b;
-}
-
-.ticket-filters {
-    margin-top: 20px;
-    padding: 18px;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    background: #f8fafc;
-}
-
-.ticket-filters h3 {
-    margin: 0 0 14px;
-    font-size: 17px;
-}
-
-.ticket-filter-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-}
-
-.ticket-filter-grid label {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.secondary-button {
-    background: #e2e8f0;
-    color: #334155;
-}
-
-.secondary-button:hover {
-    background: #cbd5e1;
 }
 
 .ticket-summary {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .ticket-summary .summary-card b {
@@ -404,24 +370,6 @@ tr:hover td {
     margin: 0 0 14px;
     color: #102a43;
     font-size: 18px;
-}
-
-.ticket-matrix th:not(:first-child),
-.ticket-matrix td:not(:first-child) {
-    text-align: center;
-}
-
-.ticket-details-table {
-    min-width: 1450px;
-}
-
-.ticket-details-table td:nth-child(2) {
-    min-width: 240px;
-}
-
-.ticket-details-table td:nth-child(3),
-.ticket-details-table td:nth-child(5) {
-    min-width: 190px;
 }
 
 /* ===============================
@@ -606,8 +554,7 @@ tr:hover td {
 @media (max-width: 1000px) {
     .settings-grid,
     .http-grid,
-    .summary,
-    .ticket-filter-grid {
+    .summary {
         grid-template-columns: 1fr 1fr;
     }
 
@@ -625,8 +572,7 @@ tr:hover td {
     .settings-grid,
     .http-grid,
     .summary,
-    .employees-list,
-    .ticket-filter-grid {
+    .employees-list {
         grid-template-columns: 1fr;
     }
 

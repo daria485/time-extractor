@@ -175,26 +175,17 @@
     </section>
 
     <section class="panel" id="ticketsSection">
-        <h2>5. Работа с тикетами</h2>
-
-        <p>
-            Загрузите выгрузку тикетов в формате <b>.xls</b> или <b>.xlsx</b>.
-            В расчёт попадут только завершённые тикеты с корректными датами
-            регистрации и завершения.
-        </p>
+        <h2>5. Тикеты</h2>
 
         <div class="upload-box">
             <input
                 type="file"
                 id="ticketFileInput"
-                accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                accept=".xls,.xlsx"
             >
-
             <p>
-                Обязательные поля: №, Статус, Приоритет, Вид работ,
-                Исполнитель, Длительность, Заявка открыта и Заявка закрыта.
-                Если в выгрузке есть поле «Длительность пауз»,
-                оно автоматически вычитается из времени решения.
+                Загрузите выгрузку тикетов за нужный период.
+                В расчёт попадут только завершённые тикеты.
             </p>
         </div>
 
@@ -203,49 +194,6 @@
             id="ticketStatus"
             hidden
         ></div>
-
-        <div
-            class="ticket-filters"
-            id="ticketFiltersPanel"
-            hidden
-        >
-            <h3>Фильтры статистики</h3>
-
-            <div class="ticket-filter-grid">
-                <label>
-                    Сотрудник
-                    <select id="ticketEmployeeFilter"></select>
-                </label>
-
-                <label>
-                    Приоритет
-                    <select id="ticketPriorityFilter"></select>
-                </label>
-
-                <label>
-                    Вид работ
-                    <select id="ticketWorkTypeFilter"></select>
-                </label>
-            </div>
-
-            <div class="actions">
-                <button
-                    type="button"
-                    id="ticketResetFiltersBtn"
-                    class="secondary-button"
-                >
-                    Сбросить фильтры
-                </button>
-
-                <button
-                    type="button"
-                    id="ticketExportBtn"
-                    disabled
-                >
-                    Скачать тикеты CSV
-                </button>
-            </div>
-        </div>
     </section>
 
     <section
@@ -264,23 +212,13 @@
         </div>
 
         <div class="summary-card">
-            <span>Среднее время решения без пауз</span>
-            <b id="ticketAverageResolution">—</b>
+            <span>Суммарно от создания до закрытия</span>
+            <b id="ticketTotalResolution">—</b>
         </div>
 
         <div class="summary-card">
-            <span>Медианное время решения без пауз</span>
-            <b id="ticketMedianResolution">—</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Фактическое время работы</span>
-            <b id="ticketActualTime">—</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Заполненность длительности</span>
-            <b id="ticketDurationCoverage">0 из 0</b>
+            <span>Суммарная длительность работ</span>
+            <b id="ticketTotalActual">Не заполнено</b>
         </div>
     </section>
 
@@ -289,22 +227,18 @@
         id="ticketResultsPanel"
         hidden
     >
-        <h2>Статистика по тикетам</h2>
+        <h2>6. Результат по тикетам</h2>
 
         <div class="ticket-subsection">
             <h3>По сотрудникам</h3>
-
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
                             <th>Сотрудник</th>
-                            <th>Тикетов</th>
-                            <th>Среднее время решения</th>
-                            <th>Медианное время решения</th>
-                            <th>Фактическое время</th>
-                            <th>Среднее фактическое время</th>
-                            <th>Длительность заполнена</th>
+                            <th>Завершённых тикетов</th>
+                            <th>Время от создания до закрытия без пауз</th>
+                            <th>Длительность работ</th>
                         </tr>
                     </thead>
                     <tbody id="ticketEmployeeBody"></tbody>
@@ -313,42 +247,15 @@
         </div>
 
         <div class="ticket-subsection">
-            <h3>По приоритетам</h3>
-
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Приоритет</th>
-                            <th>Тикетов</th>
-                            <th>Доля</th>
-                            <th>Среднее время решения</th>
-                            <th>Медианное время решения</th>
-                            <th>Фактическое время</th>
-                            <th>Среднее фактическое время</th>
-                            <th>Длительность заполнена</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketPriorityBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="ticket-subsection">
             <h3>По видам работ</h3>
-
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
                             <th>Вид работ</th>
-                            <th>Тикетов</th>
-                            <th>Доля</th>
-                            <th>Среднее время решения</th>
-                            <th>Медианное время решения</th>
-                            <th>Фактическое время</th>
-                            <th>Среднее фактическое время</th>
-                            <th>Длительность заполнена</th>
+                            <th>Завершённых тикетов</th>
+                            <th>Время от создания до закрытия без пауз</th>
+                            <th>Длительность работ</th>
                         </tr>
                     </thead>
                     <tbody id="ticketWorkTypeBody"></tbody>
@@ -357,72 +264,25 @@
         </div>
 
         <div class="ticket-subsection">
-            <h3>Матрица «Вид работ × Приоритет»</h3>
-
+            <h3>По приоритетам</h3>
             <div class="table-wrapper">
-                <table class="ticket-matrix">
-                    <thead id="ticketMatrixHead"></thead>
-                    <tbody id="ticketMatrixBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="ticket-subsection">
-            <h3>Завершённые тикеты</h3>
-
-            <div class="table-wrapper">
-                <table class="ticket-details-table">
+                <table>
                     <thead>
                         <tr>
-                            <th>№</th>
-                            <th>Тема</th>
-                            <th>Исполнитель</th>
                             <th>Приоритет</th>
-                            <th>Вид работ</th>
-                            <th>Открыт</th>
-                            <th>Закрыт</th>
-                            <th>Пауза</th>
-                            <th>Время решения без пауз</th>
-                            <th>Фактическое время</th>
+                            <th>Завершённых тикетов</th>
+                            <th>Время от создания до закрытия без пауз</th>
+                            <th>Длительность работ</th>
                         </tr>
                     </thead>
-                    <tbody id="ticketDetailsBody"></tbody>
+                    <tbody id="ticketPriorityBody"></tbody>
                 </table>
             </div>
-        </div>
-    </section>
-
-    <section
-        class="panel"
-        id="combinedPanel"
-        hidden
-    >
-        <h2>6. Общая загрузка сотрудников</h2>
-
-        <p class="hint">
-            Общее учтённое время складывается из расчётного времени работы
-            в чатах и заполненной длительности выполнения тикетов.
-            Время от регистрации до завершения тикета в загрузку не добавляется.
-        </p>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Сотрудник</th>
-                        <th>Работа в чатах</th>
-                        <th>Работа по тикетам</th>
-                        <th>Общее учтённое время</th>
-                        <th>Заполненность тикетов</th>
-                    </tr>
-                </thead>
-                <tbody id="combinedBody"></tbody>
-            </table>
         </div>
     </section>
 
     <section class="panel muted">
-        <h2>Как рассчитывается время в чатах</h2>
+        <h2>Как рассчитывается время</h2>
 
         <p>
             Time extractor считает не фактическое время, которое сотрудник провёл за компьютером,
@@ -468,39 +328,9 @@
         </p>
 
         <p>
-            Итоговый показатель можно использовать для оценки нагрузки сотрудников в чатах, сравнения месяцев,
-            анализа распределения обращений и расчёта доли работы в чатах в общем рабочем времени.
-            Время обработки тикетов в этот показатель пока не входит.
-        </p>
-    </section>
-
-    <section class="panel muted">
-        <h2>Как рассчитывается время по тикетам</h2>
-
-        <p>
-            В статистику включаются только тикеты со статусом «Завершена».
-            Выполняющиеся, отменённые и незавершённые тикеты полностью
-            исключаются из расчёта.
-        </p>
-
-        <p>
-            Время решения рассчитывается как разница между датой завершения
-            и датой регистрации за вычетом суммарной длительности пауз:
-            <b>закрытие − открытие − паузы</b>.
-        </p>
-
-        <p>
-            Фактическое рабочее время берётся из поля «Длительность».
-            Значение 0:00 считается незаполненным и не участвует в среднем
-            фактическом времени. Только заполненная длительность тикетов
-            складывается с расчётным временем работы в чатах.
-        </p>
-
-        <p>
-            Статистика рассчитывается отдельно по сотрудникам, приоритетам
-            и видам работ. Среднее и медианное время решения показывают
-            скорость прохождения тикетов, а суммарная длительность —
-            фактическую загрузку сотрудников.
+            Тикеты считаются отдельно от чатов. Для завершённого тикета программа показывает
+            время от создания до закрытия за вычетом пауз и фактическую длительность работ
+            из одноимённого поля. Незавершённые тикеты в статистику не входят.
         </p>
     </section>
 
