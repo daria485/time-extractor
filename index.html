@@ -4,354 +4,277 @@
     <meta charset="UTF-8">
     <title>Time extractor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260813-1947">
 </head>
 <body>
-
 <div class="app">
-
     <header class="header">
         <div>
             <h1>Time extractor</h1>
-            <p>Расчёт активного времени сотрудников в чатах 1С-Коннект</p>
+            <p>Расчёт трудозатрат сотрудников по чатам и заявкам</p>
         </div>
     </header>
 
-    <section class="panel">
-        <h2>1. Источник данных</h2>
+    <nav class="main-tabs" aria-label="Разделы приложения">
+        <button class="main-tab active" id="employeesMainTab" type="button">Сотрудники</button>
+        <button class="main-tab" id="ticketsMainTab" type="button">Заявки</button>
+    </nav>
 
-        <div class="tabs">
-            <button class="tab active" id="tabFile" type="button">Загрузить JSON-файл</button>
-            <button class="tab" id="tabHttp" type="button">Загрузить из 1С HTTP-сервиса</button>
-        </div>
-
-        <div id="fileSourceBlock" class="source-block">
-            <div class="upload-box">
-                <input type="file" id="fileInput" accept=".json">
-                <p>
-                    Поддерживается выгрузка формата 1С-Коннект с массивом <b>Dialogs</b>.
-                </p>
+    <main id="employeesSection">
+        <section class="panel">
+            <h2>1. Источник данных чатов</h2>
+            <div class="tabs">
+                <button class="tab active" id="tabFile" type="button">Загрузить JSON-файл</button>
+                <button class="tab" id="tabHttp" type="button">Загрузить из 1С HTTP-сервиса</button>
             </div>
-        </div>
 
-        <div id="httpSourceBlock" class="source-block" hidden>
-            <div class="settings-grid http-grid">
+            <div id="fileSourceBlock" class="source-block">
+                <div class="upload-box">
+                    <input type="file" id="fileInput" accept=".json,application/json">
+                    <p>Поддерживается выгрузка 1С-Коннект с массивом <b>Dialogs</b>.</p>
+                </div>
+            </div>
 
-                <label>
-                    URL HTTP-сервиса
-                    <input
-                        type="text"
-                        id="apiUrl"
-                        value="https://beta.altapp.ru/31NE53HZ/hs/gpt/dialogs"
-                    >
+            <div id="httpSourceBlock" class="source-block" hidden>
+                <div class="settings-grid http-grid">
+                    <label>URL HTTP-сервиса
+                        <input type="url" id="apiUrl" value="https://beta.altapp.ru/31NE53HZ/hs/gpt/dialogs">
+                    </label>
+                    <label>Дата с<input type="date" id="dateFrom"></label>
+                    <label>Дата по<input type="date" id="dateTo"></label>
+                    <label>Линия<select id="dialogLine"></select></label>
+                    <label>Логин<input type="text" id="apiLogin" autocomplete="username"></label>
+                    <label>Пароль<input type="password" id="apiPassword" autocomplete="current-password"></label>
+                </div>
+                <div class="actions">
+                    <button id="loadHttpBtn" type="button">Загрузить данные из 1С</button>
+                </div>
+                <p class="hint">Запрос выполняется через сервер приложения с параметрами <b>line</b>, <b>StartDate</b> и <b>EndDate</b>.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>2. Настройки расчёта</h2>
+            <div class="settings-grid">
+                <label>Компания сотрудников<input type="text" id="employeeCompany" value="ООО Селекта Сервис"></label>
+                <label>Максимальный активный интервал, минут<input type="number" id="maxInterval" value="15" min="1" max="120"></label>
+                <label>Минимум на сообщение, секунд<input type="number" id="minMessageTime" value="30" min="0" max="300"></label>
+                <label>Учитывать сообщения специалиста-инициатора
+                    <select id="includeSpecialistInitiated">
+                        <option value="yes" selected>Да</option>
+                        <option value="no">Нет</option>
+                    </select>
                 </label>
+            </div>
+            <div class="actions">
+                <button id="analyzeBtn" disabled>Посчитать время</button>
+                <button id="exportBtn" disabled>Скачать CSV</button>
+            </div>
+        </section>
 
-                <label>
-                    Дата с
-                    <input type="date" id="dateFrom">
-                </label>
+        <section class="panel" id="employeesPanel" hidden>
+            <h2>3. Сотрудники за выбранный период</h2>
+            <p class="hint">Сотрудники определяются по совпадению компании автора сообщения. Отметьте участников расчёта.</p>
+            <div class="employee-actions">
+                <button id="selectAllEmployeesBtn" type="button">Выбрать всех</button>
+                <button id="clearEmployeesBtn" type="button">Снять выбор</button>
+            </div>
+            <div id="employeesList" class="employees-list"></div>
+        </section>
 
-                <label>
-                    Дата по
-                    <input type="date" id="dateTo">
-                </label>
+        <section class="summary" id="summary" hidden>
+            <div class="summary-card"><span>Диалогов в данных</span><b id="totalDialogs">0</b></div>
+            <div class="summary-card"><span>Диалогов выбранных сотрудников</span><b id="employeeDialogs">0</b></div>
+            <div class="summary-card"><span>Сообщений сотрудников</span><b id="employeeMessages">0</b></div>
+            <div class="summary-card"><span>Расчётное время</span><b id="totalTime">0 ч 0 мин</b></div>
+        </section>
 
-                <label>
-                    Линия
-                    <select id="dialogLine"></select>
-                </label>
+        <section class="panel" id="resultsPanel" hidden>
+            <h2>4. Результат по сотрудникам</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Сотрудник</th><th>Диалогов</th><th>Сообщений</th><th>Активное время</th><th>Среднее на диалог</th><th>Среднее на сообщение</th><th>Диалоги</th></tr></thead>
+                    <tbody id="resultBody"></tbody>
+                </table>
+            </div>
+        </section>
 
-                <label>
-                    Логин
-                    <input type="text" id="apiLogin" autocomplete="username">
-                </label>
+        <section class="panel muted">
+            <h2>Как рассчитывается время чатов</h2>
+            <p>Это расчётное активное время, а не фактический табель. Для каждого несистемного сообщения сотрудника берётся интервал от предыдущего несистемного сообщения в диалоге.</p>
+            <p>Интервал ограничивается максимумом <b>15 минут</b> и минимумом <b>30 секунд</b> на сообщение. Значения можно изменить в настройках.</p>
+            <p>Системные сообщения не учитываются. Если отвечали несколько сотрудников, время распределяется по авторам сообщений.</p>
+        </section>
+    </main>
 
-                <label>
-                    Пароль
-                    <input type="password" id="apiPassword" autocomplete="current-password">
-                </label>
+    <main id="ticketsSection" hidden>
+        <section class="panel">
+            <h2>1. Источник данных заявок</h2>
+            <div class="tabs">
+                <button class="tab active" id="ticketTabFile" type="button">Загрузить XLS/XLSX</button>
+                <button class="tab" id="ticketTabHttp" type="button">Загрузить из HTTP-сервиса</button>
+            </div>
 
+            <div id="ticketFileSourceBlock" class="source-block">
+                <div class="ticket-upload-grid">
+                    <div class="upload-box">
+                        <label class="upload-title" for="ticketFileInput">Файл заявок</label>
+                        <input type="file" id="ticketFileInput" accept=".xls,.xlsx,.json">
+                        <p>Ожидаются столбцы: <b>Время создания</b>, <b>Линия</b>, <b>Тип заявки</b>, <b>Исполнитель</b>, <b>Срок заявки</b>, <b>Длительность работы (сек)</b>.</p>
+                    </div>
+                    <div class="upload-box">
+                        <label class="upload-title" for="ticketHistoryFileInput">Файл смены статусов</label>
+                        <input type="file" id="ticketHistoryFileInput" accept=".xls,.xlsx,.json">
+                        <p>Поддерживаются заголовки: <b>Период</b>, <b>ID заявки / Идентификатор заявки</b>, <b>№ заявки / Номер заявки</b>, <b>Новый статус / Новое значение</b>. Строка заголовков может находиться не в первой строке Excel.</p>
+                    </div>
+                </div>
+                <div class="settings-grid compact-grid">
+                    <label>Дата с<input type="date" id="ticketFileDateFrom"></label>
+                    <label>Дата по<input type="date" id="ticketFileDateTo"></label>
+                    <label>Линия<select id="ticketFileLine" disabled><option value="">Все линии</option></select></label>
+                    <label>Учитывать отменённые заявки
+                        <select id="ticketFileIncludeCancelled"><option value="no" selected>Нет</option><option value="yes">Да</option></select>
+                    </label>
+                </div>
+            </div>
+
+            <div id="ticketHttpSourceBlock" class="source-block" hidden>
+                <div class="settings-grid http-grid">
+                    <label>URL HTTP-сервиса заявок<input type="url" id="ticketApiUrl" placeholder="https://.../hs/.../tickets"></label>
+                    <label>URL истории статусов<input type="url" id="ticketHistoryApiUrl" placeholder="https://.../hs/.../ticket-status-history"></label>
+                    <label>Дата с<input type="date" id="ticketHttpDateFrom"></label>
+                    <label>Дата по<input type="date" id="ticketHttpDateTo"></label>
+                    <label>Линия<select id="ticketHttpLine"></select></label>
+                    <label>Логин<input type="text" id="ticketApiLogin" autocomplete="username"></label>
+                    <label>Пароль<input type="password" id="ticketApiPassword" autocomplete="current-password"></label>
+                    <label>Учитывать отменённые заявки
+                        <select id="ticketHttpIncludeCancelled"><option value="no" selected>Нет</option><option value="yes">Да</option></select>
+                    </label>
+                </div>
+                <div class="actions"><button id="loadTicketsHttpBtn" type="button">Загрузить заявки</button></div>
+                <p class="hint">Историю можно вернуть вместе с заявками в массиве <b>StatusHistory</b> или загрузить по отдельному URL. Для расчёта общего времени и дедлайнов история статусов обязательна.</p>
             </div>
 
             <div class="actions">
-                <button id="loadHttpBtn" type="button">Загрузить данные из 1С</button>
+                <button id="analyzeTicketsBtn" type="button" disabled>Посчитать заявки</button>
+                <button id="exportTicketsBtn" type="button" disabled>Скачать CSV</button>
+                <button id="exportTicketsPdfBtn" type="button" disabled>&#1057;&#1082;&#1072;&#1095;&#1072;&#1090;&#1100; PDF-&#1086;&#1090;&#1095;&#1105;&#1090;</button>
             </div>
+            <div id="ticketLoadStatus" class="status-line" hidden></div>
+        </section>
 
-            <p class="hint">
-                Программа отправляет GET-запрос к HTTP-сервису 1С с параметрами:
-                <b>line</b>, <b>StartDate</b>, <b>EndDate</b>.
-                Даты автоматически преобразуются в формат <b>ГГГГ.ММ.ДД</b>.
-                Логин и пароль используются только для текущего запроса и не сохраняются в коде.
-            </p>
-        </div>
-    </section>
-
-    <section class="panel">
-        <h2>2. Настройки расчёта</h2>
-
-        <div class="settings-grid">
-
-            <label>
-                Компания сотрудников
-                <input type="text" id="employeeCompany" value="ООО Селекта Сервис">
-            </label>
-
-            <label>
-                Максимальный активный интервал, минут
-                <input type="number" id="maxInterval" value="15" min="1" max="120">
-            </label>
-
-            <label>
-                Минимум на ответ, секунд
-                <input type="number" id="minMessageTime" value="10" min="0" max="300">
-            </label>
-
-        </div>
-
-        <div class="actions">
-            <button id="analyzeBtn" disabled>Посчитать время</button>
-            <button id="exportBtn" disabled>Скачать CSV</button>
-        </div>
-    </section>
-
-    <section class="panel" id="employeesPanel" hidden>
-        <h2>3. Сотрудники за выбранный период</h2>
-
-        <p class="hint">
-            Программа определила сотрудников по сообщениям, где компания автора совпадает с указанной компанией сотрудников.
-            Отметьте только тех сотрудников, которых нужно включить в расчёт.
-        </p>
-
-        <div class="employee-actions">
-            <button id="selectAllEmployeesBtn" type="button">Выбрать всех</button>
-            <button id="clearEmployeesBtn" type="button">Снять выбор</button>
-        </div>
-
-        <div id="employeesList" class="employees-list"></div>
-    </section>
-
-    <section class="summary" id="summary" hidden>
-        <div class="summary-card">
-            <span>Диалогов в данных</span>
-            <b id="totalDialogs">0</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Диалогов с участием выбранных сотрудников</span>
-            <b id="employeeDialogs">0</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Учтённых ответов выбранных сотрудников</span>
-            <b id="employeeResponses">0</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Расчётное время</span>
-            <b id="totalTime">0 ч 0 мин</b>
-        </div>
-    </section>
-
-    <section class="panel" id="resultsPanel" hidden>
-        <h2>4. Результат по сотрудникам</h2>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Сотрудник</th>
-                        <th>Диалогов</th>
-                        <th>Учтённых ответов</th>
-                        <th>Активное время</th>
-                        <th>Среднее на диалог</th>
-                        <th>Среднее на ответ</th>
-                        <th>Диалоги</th>
-                    </tr>
-                </thead>
-                <tbody id="resultBody"></tbody>
-            </table>
-        </div>
-    </section>
-
-    <section class="panel" id="ticketsSection">
-        <h2>5. Тикеты</h2>
-
-        <div class="upload-box">
-            <input
-                type="file"
-                id="ticketFileInput"
-                accept=".xls,.xlsx"
-            >
-            <p>
-                Загрузите выгрузку тикетов за нужный период.
-                В расчёт попадут только завершённые тикеты.
-            </p>
-        </div>
-
-        <div
-            class="ticket-status"
-            id="ticketStatus"
-            hidden
-        ></div>
-    </section>
-
-    <section
-        class="summary ticket-summary"
-        id="ticketSummary"
-        hidden
-    >
-        <div class="summary-card">
-            <span>Тикетов в файле</span>
-            <b id="ticketLoadedCount">0</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Завершённых в расчёте</span>
-            <b id="ticketIncludedCount">0</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Суммарно от создания до закрытия</span>
-            <b id="ticketTotalResolution">—</b>
-        </div>
-
-        <div class="summary-card">
-            <span>Суммарная длительность работ</span>
-            <b id="ticketTotalActual">Не заполнено</b>
-        </div>
-    </section>
-
-    <section
-        class="panel"
-        id="ticketResultsPanel"
-        hidden
-    >
-        <h2>6. Результат по тикетам</h2>
-
-        <div class="ticket-subsection">
-            <h3>По сотрудникам</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Сотрудник</th>
-                            <th>Завершённых тикетов</th>
-                            <th>Время от создания до закрытия без пауз</th>
-                            <th>Длительность работ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketEmployeeBody"></tbody>
+        <section class="panel" id="ticketWorkHoursPanel" hidden>
+            <h2>2. Отработанное время сотрудников</h2>
+            <p class="hint">Рабочие дни и норма часов рассчитываются по производственному календарю РФ для пятидневной 40-часовой недели. В программу встроен календарь 2026 года с праздничными, перенесёнными выходными и сокращёнными предпраздничными днями. Фактически отработанные часы вводятся отдельно по каждому сотруднику — их можно уменьшить с учётом отпусков, отгулов, больничных и других отсутствий.</p>
+            <div class="table-wrapper work-hours-table-wrapper">
+                <table class="work-hours-table">
+                    <thead><tr><th>Исполнитель</th><th>Рабочих дней по производственному календарю</th><th>Норма часов по производственному календарю</th><th>Фактически отработано часов</th></tr></thead>
+                    <tbody id="ticketWorkHoursBody"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <div class="ticket-subsection">
-            <h3>По видам работ</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Вид работ</th>
-                            <th>Завершённых тикетов</th>
-                            <th>Время от создания до закрытия без пауз</th>
-                            <th>Длительность работ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketWorkTypeBody"></tbody>
+        <section class="panel">
+            <div class="section-heading-row">
+                <div>
+                    <h2>3. Категории и стандартное время</h2>
+                    <p class="hint">В код встроены две группы категорий. Тематика определяется по типу, теме, описанию проблемы и решению заявки. Несколько вариантов названия можно указать через вертикальную черту.</p>
+                </div>
+                <div class="actions inline-actions">
+                    <button id="addCategoryBtn" class="secondary-button" type="button">Добавить категорию</button>
+                    <button id="resetCategoriesBtn" class="secondary-button" type="button">Вернуть исходные</button>
+                </div>
+            </div>
+            <div class="table-wrapper category-table-wrapper">
+                <table class="editable-table">
+                    <thead><tr><th>Группа</th><th>Категория / варианты в выгрузке</th><th>Норматив, минут</th><th></th></tr></thead>
+                    <tbody id="categoriesBody"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <div class="ticket-subsection">
-            <h3>По приоритетам</h3>
+        <section class="summary ticket-summary" id="ticketSummary" hidden>
+            <div class="summary-card"><span>Обработано тикетов</span><b id="ticketTotalCount">0</b></div>
+            <div class="summary-card"><span>Исполнителей</span><b id="ticketEmployeesCount">0</b></div>
+            <div class="summary-card"><span>Общее время тикетов</span><b id="ticketTotalLifecycle">0 мин</b></div>
+            <div class="summary-card"><span>Фактическое время работ</span><b id="ticketStandardTotal">0 мин</b></div>
+            <div class="summary-card"><span>Просрочено</span><b id="ticketOverduePercent">0%</b></div>
+        </section>
+
+        <section class="panel" id="ticketResultsPanel" hidden>
+            <h2>4. Сводка</h2>
             <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Приоритет</th>
-                            <th>Завершённых тикетов</th>
-                            <th>Время от создания до закрытия без пауз</th>
-                            <th>Длительность работ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ticketPriorityBody"></tbody>
+                <table class="ticket-result-table">
+                    <thead><tr>
+                        <th>Исполнитель</th>
+                        <th>Обработано тикетов</th>
+                        <th>Общее время тикетов<br><span>Новая → Завершена</span></th>
+                        <th>Длительность</th>
+                        <th>Фактическое время работ<br><span>по нормативу тематики</span></th>
+                        <th>Рабочих дней<br><span>по производственному календарю</span></th>
+                        <th>Норма часов<br><span>по производственному календарю</span></th>
+                        <th>Фактически отработано часов</th>
+                        <th>% времени на тикеты</th>
+                        <th>С дедлайном</th>
+                        <th>В срок</th>
+                        <th>Просрочено</th>
+                        <th>% просроченных</th>
+                        <th>Заявки</th>
+                    </tr></thead>
+                    <tbody id="ticketResultBody"></tbody>
                 </table>
             </div>
-        </div>
-    </section>
+            <p class="hint result-note">В сводку входят только завершённые заявки. «Фактическое время работ» — сумма стандартного времени тематик. Норма часов берётся из производственного календаря РФ. Фактически отработанные часы вводятся вручную по каждому сотруднику. Процент времени = нормативное время по тематикам ÷ фактически отработанные часы. Процент просроченных = просроченные ÷ завершённые заявки, для которых удалось определить и дедлайн, и фактическое время завершения.</p>
+        </section>
 
-    <section class="panel muted">
-        <h2>Как рассчитывается время</h2>
-
-        <p>
-            Time extractor считает не фактическое время, которое сотрудник провёл за компьютером,
-            а <b>расчётное активное время работы с обращениями</b>. Это оценка времени, которое сотрудник
-            мог потратить на чтение сообщения, анализ ситуации, подготовку ответа и отправку сообщения в чат.
-        </p>
-
-        <p>
-            Расчёт выполняется по циклам <b>«вопрос 1-й линии — первый ответ 2-й линии»</b>.
-            Несистемные сообщения авторов, чья компания не совпадает с компанией сотрудников,
-            считаются сообщениями 1-й линии. Сообщения авторов из компании сотрудников считаются
-            сообщениями 2-й линии.
-        </p>
-
-        <p>
-            Если специалист 1-й линии отправил несколько сообщений подряд, они образуют один вопрос.
-            Точкой отсчёта становится последнее сообщение 1-й линии перед ответом. Программа учитывает
-            только первое последующее сообщение 2-й линии. Остальные сообщения 2-й линии не создают
-            новые расчётные интервалы, пока специалист 1-й линии не напишет снова.
-        </p>
-
-        <p>
-            Если ответ получен менее чем через <b>10 секунд</b>, сотруднику засчитывается 10 секунд.
-            Если интервал составляет от 10 секунд до <b>15 минут включительно</b>, засчитывается
-            фактическое время между последним сообщением 1-й линии и первым ответом 2-й линии.
-        </p>
-
-        <p>
-            Если ответ дан более чем через 15 минут, время по этому циклу не засчитывается.
-            Предполагается, что вопрос, требующий более 15 минут, должен обрабатываться в системе тикетов,
-            а не в рамках чата.
-        </p>
-
-        <p>
-            Сообщения сотрудника 2-й линии, отправленные до первого вопроса 1-й линии, не учитываются.
-            Если в диалоге отвечали несколько сотрудников 2-й линии, расчётный интервал относится к тому,
-            кто первым ответил на соответствующий вопрос.
-        </p>
-
-        <p>
-            Системные сообщения в расчёт не попадают. Например: поступление обращения в очередь, нерабочее время,
-            передача файла через чат, начало обращения, автоматическое закрытие и завершение работы специалиста.
-        </p>
-
-        <p>
-            Тикеты считаются отдельно от чатов. Для завершённого тикета программа показывает
-            время от создания до закрытия за вычетом пауз и фактическую длительность работ
-            из одноимённого поля. Незавершённые тикеты в статистику не входят.
-        </p>
-    </section>
-
+        <section class="panel ticket-charts-panel" id="ticketChartsPanel" hidden>
+            <div class="section-heading-row">
+                <div>
+                    <h2>5. &#1056;&#1072;&#1089;&#1087;&#1088;&#1077;&#1076;&#1077;&#1083;&#1077;&#1085;&#1080;&#1077; &#1079;&#1072;&#1103;&#1074;&#1086;&#1082; &#1087;&#1086; &#1082;&#1072;&#1090;&#1077;&#1075;&#1086;&#1088;&#1080;&#1103;&#1084;</h2>
+                    <p class="hint">&#1050;&#1072;&#1078;&#1076;&#1072;&#1103; &#1076;&#1080;&#1072;&#1075;&#1088;&#1072;&#1084;&#1084;&#1072; &#1087;&#1086;&#1082;&#1072;&#1079;&#1099;&#1074;&#1072;&#1077;&#1090; &#1076;&#1086;&#1083;&#1102; &#1079;&#1072;&#1074;&#1077;&#1088;&#1096;&#1105;&#1085;&#1085;&#1099;&#1093; &#1079;&#1072;&#1103;&#1074;&#1086;&#1082; &#1082;&#1072;&#1078;&#1076;&#1086;&#1081; &#1082;&#1072;&#1090;&#1077;&#1075;&#1086;&#1088;&#1080;&#1080; &#1074;&#1085;&#1091;&#1090;&#1088;&#1080; &#1089;&#1074;&#1086;&#1077;&#1081; &#1075;&#1088;&#1091;&#1087;&#1087;&#1099;.</p>
+                </div>
+            </div>
+            <div class="ticket-charts-grid">
+                <article class="ticket-chart-card" id="ticketClientChartCard">
+                    <h3>2 &#1083;&#1080;&#1085;&#1080;&#1103; - &#1074;&#1086;&#1087;&#1088;&#1086;&#1089;&#1099; &#1082;&#1083;&#1080;&#1077;&#1085;&#1090;&#1086;&#1074;</h3>
+                    <div class="ticket-chart-content">
+                        <div class="ticket-chart-canvas-wrap"><canvas id="ticketClientCategoryChart" width="640" height="640"></canvas></div>
+                        <div class="ticket-chart-legend" id="ticketClientCategoryLegend"></div>
+                    </div>
+                </article>
+                <article class="ticket-chart-card" id="ticketInternalChartCard">
+                    <h3>2 &#1083;&#1080;&#1085;&#1080;&#1103; - &#1074;&#1085;&#1091;&#1090;&#1088;&#1077;&#1085;&#1085;&#1080;&#1077; &#1074;&#1086;&#1087;&#1088;&#1086;&#1089;&#1099;</h3>
+                    <div class="ticket-chart-content">
+                        <div class="ticket-chart-canvas-wrap"><canvas id="ticketInternalCategoryChart" width="640" height="640"></canvas></div>
+                        <div class="ticket-chart-legend" id="ticketInternalCategoryLegend"></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
 </div>
 
 <div class="modal-overlay" id="dialogsModal" hidden>
     <div class="modal">
-        <div class="modal-header">
-            <div>
-                <h2 id="dialogsModalTitle">Диалоги сотрудника</h2>
-                <p id="dialogsModalSubtitle"></p>
-            </div>
-            <button class="modal-close" id="closeDialogsModal" type="button">×</button>
-        </div>
-
+        <div class="modal-header"><div><h2 id="dialogsModalTitle">Диалоги сотрудника</h2><p id="dialogsModalSubtitle"></p></div><button class="modal-close" id="closeDialogsModal" type="button">×</button></div>
         <div class="modal-body" id="dialogsModalBody"></div>
     </div>
 </div>
 
-<script src="xlsx.full.min.js"></script>
-<script src="app.js"></script>
-<script src="tickets.js"></script>
+<div class="modal-overlay" id="ticketsModal" hidden>
+    <div class="modal ticket-modal">
+        <div class="modal-header">
+            <div><h2 id="ticketsModalTitle">&#1047;&#1072;&#1103;&#1074;&#1082;&#1080; &#1089;&#1086;&#1090;&#1088;&#1091;&#1076;&#1085;&#1080;&#1082;&#1072;</h2><p id="ticketsModalSubtitle"></p></div>
+            <div class="modal-header-actions">
+                <button class="secondary-button modal-pdf-button" id="ticketsModalPdfBtn" type="button">&#1057;&#1082;&#1072;&#1095;&#1072;&#1090;&#1100; PDF</button>
+                <button class="modal-close" id="closeTicketsModal" type="button">&times;</button>
+            </div>
+        </div>
+        <div class="modal-body" id="ticketsModalBody"></div>
+    </div>
+</div>
+
+<script src="/vendor/xlsx.full.min.js"></script>
+<script src="app.js?v=20260813-1947"></script>
 </body>
 </html>
