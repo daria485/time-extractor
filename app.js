@@ -1,6 +1,6 @@
 // ===============================
 // TIME EXTRACTOR
-// Расчёт активного времени в чатах 1С-Коннект
+// \u0420\u0430\u0441\u0447\u0451\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0433\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u0432 \u0447\u0430\u0442\u0430\u0445 1\u0421-\u041A\u043E\u043D\u043D\u0435\u043A\u0442
 // ===============================
 
 let rawData = null;
@@ -8,45 +8,45 @@ let analysisResult = [];
 let detectedEmployees = [];
 
 // ===============================
-// Справочник линий 1С-Коннект
+// \u0421\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A \u043B\u0438\u043D\u0438\u0439 1\u0421-\u041A\u043E\u043D\u043D\u0435\u043A\u0442
 // ===============================
 
 // ===============================
-// Справочник линий Альтап
+// \u0421\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A \u043B\u0438\u043D\u0438\u0439 \u0410\u043B\u044C\u0442\u0430\u043F
 // ===============================
 
 const CONNECT_LINES = [
     {
         id: "ca1744da-5079-11ed-9bb6-00505601495b",
-        name: "! АЛЬТАП: ЛК"
+        name: "! \u0410\u041B\u042C\u0422\u0410\u041F: \u041B\u041A"
     },
     {
         id: "b4da4d40-2978-11ef-9ef5-00505601495b",
-        name: "ALTAPP Внутренняя"
+        name: "ALTAPP \u0412\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u044F\u044F"
     },
     {
         id: "2e6c5d29-bb84-11e6-80e3-0025904f970d",
-        name: "ALTAPP Клиентам"
+        name: "ALTAPP \u041A\u043B\u0438\u0435\u043D\u0442\u0430\u043C"
     },
     {
         id: "65fe7282-bb83-11e6-80e3-0025904f970d",
-        name: "ALTAPP Партнерам"
+        name: "ALTAPP \u041F\u0430\u0440\u0442\u043D\u0435\u0440\u0430\u043C"
     },
     {
         id: "c07f2a30-8f9e-11ef-887c-00505601495b",
-        name: "ALTAPP Федеральная линия поддержки клиентов 1С (1)"
+        name: "ALTAPP \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043B\u0438\u043D\u0438\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0438 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 1\u0421 (1)"
     },
     {
         id: "8abecf72-a8cb-11ef-9815-00505601495b",
-        name: "ALTAPP Федеральная линия поддержки клиентов 1С (2)"
+        name: "ALTAPP \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043B\u0438\u043D\u0438\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0438 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 1\u0421 (2)"
     },
     {
         id: "cdf56de4-f8fa-11ef-9819-00505601495b",
-        name: "ALTAPP Бухгалтерия"
+        name: "ALTAPP \u0411\u0443\u0445\u0433\u0430\u043B\u0442\u0435\u0440\u0438\u044F"
     },
     {
         id: "c45ec0e4-dcd1-11f0-98e9-00505601495b",
-        name: "ALTAPP по работе в программах 1С"
+        name: "ALTAPP \u043F\u043E \u0440\u0430\u0431\u043E\u0442\u0435 \u0432 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430\u0445 1\u0421"
     }
 ];
 
@@ -140,7 +140,7 @@ resultBody.addEventListener("click", event => {
     const employeeName = button.dataset.employee;
 
     if (!employeeName) {
-        alert("Не удалось определить сотрудника для просмотра диалогов.");
+        alert("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430 \u0434\u043B\u044F \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u0434\u0438\u0430\u043B\u043E\u0433\u043E\u0432.");
         return;
     }
 
@@ -166,7 +166,7 @@ document.addEventListener("keydown", event => {
 });
 
 // ===============================
-// Заполнение списка линий
+// \u0417\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0441\u043F\u0438\u0441\u043A\u0430 \u043B\u0438\u043D\u0438\u0439
 // ===============================
 
 function fillLinesSelect() {
@@ -182,7 +182,7 @@ function fillLinesSelect() {
             dialogLineInput.appendChild(option);
         });
 
-    const defaultLine = CONNECT_LINES.find(line => line.name === "ALTAPP Партнерам");
+    const defaultLine = CONNECT_LINES.find(line => line.name === "ALTAPP \u041F\u0430\u0440\u0442\u043D\u0435\u0440\u0430\u043C");
 
     if (defaultLine) {
         dialogLineInput.value = defaultLine.id;
@@ -190,7 +190,7 @@ function fillLinesSelect() {
 }
 
 // ===============================
-// Источник данных
+// \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0434\u0430\u043D\u043D\u044B\u0445
 // ===============================
 
 function switchSource(source) {
@@ -209,7 +209,7 @@ function switchSource(source) {
 }
 
 // ===============================
-// Загрузка файла
+// \u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0444\u0430\u0439\u043B\u0430
 // ===============================
 
 function handleFileUpload(event) {
@@ -224,9 +224,9 @@ function handleFileUpload(event) {
     reader.onload = function(e) {
         try {
             const parsedData = JSON.parse(e.target.result);
-            setRawData(parsedData, "Файл успешно загружен. Можно выбирать сотрудников и запускать расчёт.");
+            setRawData(parsedData, "\u0424\u0430\u0439\u043B \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D. \u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0438\u0440\u0430\u0442\u044C \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432 \u0438 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0442\u044C \u0440\u0430\u0441\u0447\u0451\u0442.");
         } catch (error) {
-            alert("Не удалось прочитать JSON-файл. Проверьте, что загружена корректная выгрузка.");
+            alert("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C JSON-\u0444\u0430\u0439\u043B. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435, \u0447\u0442\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u0430 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0432\u044B\u0433\u0440\u0443\u0437\u043A\u0430.");
             resetData();
         }
     };
@@ -235,7 +235,7 @@ function handleFileUpload(event) {
 }
 
 // ===============================
-// HTTP-загрузка из 1С через локальный proxy
+// HTTP-\u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0438\u0437 1\u0421 \u0447\u0435\u0440\u0435\u0437 \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 proxy
 // ===============================
 
 async function loadDataByHttp() {
@@ -247,27 +247,27 @@ async function loadDataByHttp() {
     const password = apiPasswordInput.value;
 
     if (!apiUrl) {
-        alert("Укажите URL HTTP-сервиса.");
+        alert("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 URL HTTP-\u0441\u0435\u0440\u0432\u0438\u0441\u0430.");
         return;
     }
 
     if (!dateFrom || !dateTo) {
-        alert("Укажите период: дату с и дату по.");
+        alert("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434: \u0434\u0430\u0442\u0443 \u0441 \u0438 \u0434\u0430\u0442\u0443 \u043F\u043E.");
         return;
     }
 
     if (!lineId) {
-        alert("Выберите линию.");
+        alert("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u0438\u043D\u0438\u044E.");
         return;
     }
 
     if (!login || !password) {
-        alert("Укажите логин и пароль для доступа к HTTP-сервису 1С.");
+        alert("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u043B\u043E\u0433\u0438\u043D \u0438 \u043F\u0430\u0440\u043E\u043B\u044C \u0434\u043B\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u0430 \u043A HTTP-\u0441\u0435\u0440\u0432\u0438\u0441\u0443 1\u0421.");
         return;
     }
 
     loadHttpBtn.disabled = true;
-    loadHttpBtn.textContent = "Загружаю данные...";
+    loadHttpBtn.textContent = "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u044E \u0434\u0430\u043D\u043D\u044B\u0435...";
 
     try {
         const response = await fetch("/api/dialogs", {
@@ -291,33 +291,33 @@ async function loadDataByHttp() {
             throw new Error(data.message || `HTTP ${response.status}`);
         }
 
-        setRawData(data, "Данные успешно загружены из 1С. Можно выбирать сотрудников и запускать расчёт.");
+        setRawData(data, "\u0414\u0430\u043D\u043D\u044B\u0435 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B \u0438\u0437 1\u0421. \u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0438\u0440\u0430\u0442\u044C \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432 \u0438 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0442\u044C \u0440\u0430\u0441\u0447\u0451\u0442.");
 
     } catch (error) {
         console.error(error);
 
         alert(
-            "Не удалось загрузить данные из 1С через сервер приложения.\n\n" +
-            "Проверьте:\n" +
-            "1. Запущен ли server.js командой node server.js.\n" +
-            "2. Верный ли URL HTTP-сервиса.\n" +
-            "3. Верные ли логин и пароль.\n" +
-            "4. Верно ли выбраны период и линия.\n\n" +
-            "Техническая ошибка: " + error.message
+            "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435 \u0438\u0437 1\u0421 \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u0440\u0432\u0435\u0440 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F.\n\n" +
+            "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435:\n" +
+            "1. \u0417\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 server.js \u043A\u043E\u043C\u0430\u043D\u0434\u043E\u0439 node server.js.\n" +
+            "2. \u0412\u0435\u0440\u043D\u044B\u0439 \u043B\u0438 URL HTTP-\u0441\u0435\u0440\u0432\u0438\u0441\u0430.\n" +
+            "3. \u0412\u0435\u0440\u043D\u044B\u0435 \u043B\u0438 \u043B\u043E\u0433\u0438\u043D \u0438 \u043F\u0430\u0440\u043E\u043B\u044C.\n" +
+            "4. \u0412\u0435\u0440\u043D\u043E \u043B\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u044B \u043F\u0435\u0440\u0438\u043E\u0434 \u0438 \u043B\u0438\u043D\u0438\u044F.\n\n" +
+            "\u0422\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u043E\u0448\u0438\u0431\u043A\u0430: " + error.message
         );
     } finally {
         loadHttpBtn.disabled = false;
-        loadHttpBtn.textContent = "Загрузить данные из 1С";
+        loadHttpBtn.textContent = "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435 \u0438\u0437 1\u0421";
     }
 }
 
 // ===============================
-// Установка данных
+// \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0434\u0430\u043D\u043D\u044B\u0445
 // ===============================
 
 function setRawData(data, successMessage) {
     if (!data || !data.Dialogs || !Array.isArray(data.Dialogs)) {
-        alert("Данные получены, но массив Dialogs не найден. Проверьте формат ответа.");
+        alert("\u0414\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u044B, \u043D\u043E \u043C\u0430\u0441\u0441\u0438\u0432 Dialogs \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442 \u043E\u0442\u0432\u0435\u0442\u0430.");
         resetData();
         return;
     }
@@ -352,7 +352,7 @@ function resetData() {
 }
 
 // ===============================
-// Определение сотрудников
+// \u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432
 // ===============================
 
 function detectAndRenderEmployees() {
@@ -393,7 +393,7 @@ function detectAndRenderEmployees() {
 
             const employee = employeesMap.get(normalizedMessage.author);
             employee.messages += 1;
-            employee.dialogs.add(dialog.DialogID || "Без ID");
+            employee.dialogs.add(dialog.DialogID || "\u0411\u0435\u0437 ID");
         });
     });
 
@@ -418,7 +418,7 @@ function renderEmployeesList(employees) {
 
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.textContent = "Сотрудники не найдены. Проверьте поле «Компания сотрудников».";
+        empty.textContent = "\u0421\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u043B\u0435 \u00AB\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u044F \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432\u00BB.";
         employeesList.appendChild(empty);
 
         return;
@@ -442,7 +442,7 @@ function renderEmployeesList(employees) {
 
         const stats = document.createElement("span");
         stats.className = "employee-stats";
-        stats.textContent = `${employee.dialogsCount} диалогов, ${employee.messages} сообщений`;
+        stats.textContent = `${employee.dialogsCount} \u0434\u0438\u0430\u043B\u043E\u0433\u043E\u0432, ${employee.messages} \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439`;
 
         textWrapper.appendChild(name);
         textWrapper.appendChild(stats);
@@ -481,19 +481,19 @@ function getSelectedEmployees() {
 }
 
 // ===============================
-// Основной анализ
+// \u041E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0430\u043D\u0430\u043B\u0438\u0437
 // ===============================
 
 function runAnalysis() {
     if (!rawData || !rawData.Dialogs) {
-        alert("Сначала загрузите JSON-файл или данные из 1С.");
+        alert("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 JSON-\u0444\u0430\u0439\u043B \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438\u0437 1\u0421.");
         return;
     }
 
     const selectedEmployees = getSelectedEmployees();
 
     if (selectedEmployees.length === 0) {
-        alert("Выберите хотя бы одного сотрудника для расчёта.");
+        alert("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E\u0433\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430 \u0434\u043B\u044F \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
         return;
     }
 
@@ -518,7 +518,7 @@ function runAnalysis() {
             return;
         }
 
-        const dialogId = dialog.DialogID || "Без ID";
+        const dialogId = dialog.DialogID || "\u0411\u0435\u0437 ID";
         const dialogLine = dialog.DialogLine || "";
 
         const messages = dialog.DialogContent
@@ -545,7 +545,7 @@ function runAnalysis() {
                 continue;
             }
 
-            const employeeName = currentMessage.author || "Неизвестный сотрудник";
+            const employeeName = currentMessage.author || "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A";
 
             if (!selectedEmployeesSet.has(employeeName)) {
                 continue;
@@ -620,7 +620,7 @@ function runAnalysis() {
 }
 
 // ===============================
-// Подготовка сообщений
+// \u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0430 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439
 // ===============================
 
 function normalizeMessage(message) {
@@ -679,7 +679,7 @@ function checkSpecialistInitiated(messages) {
     const startMessage = messages.find(message => {
         return message.isSystem &&
             message.text &&
-            message.text.toLowerCase().includes("начало обращения");
+            message.text.toLowerCase().includes("\u043D\u0430\u0447\u0430\u043B\u043E \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F");
     });
 
     if (!startMessage) {
@@ -688,11 +688,11 @@ function checkSpecialistInitiated(messages) {
 
     const text = startMessage.text.toLowerCase();
 
-    return text.includes("инициатор специалист");
+    return text.includes("\u0438\u043D\u0438\u0446\u0438\u0430\u0442\u043E\u0440 \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0441\u0442");
 }
 
 // ===============================
-// Отрисовка результата
+// \u041E\u0442\u0440\u0438\u0441\u043E\u0432\u043A\u0430 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430
 // ===============================
 
 function renderSummary(data) {
@@ -708,7 +708,7 @@ function renderTable(rows) {
     if (rows.length === 0) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-            <td colspan="7">Нет данных для расчёта. Проверьте выбранных сотрудников и компанию сотрудников.</td>
+            <td colspan="7">\u041D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445 \u0434\u043B\u044F \u0440\u0430\u0441\u0447\u0451\u0442\u0430. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432 \u0438 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432.</td>
         `;
         resultBody.appendChild(tr);
         return;
@@ -730,7 +730,7 @@ function renderTable(rows) {
                     class="small-button view-dialogs-btn" 
                     data-employee="${escapeHtml(row.employee)}"
                 >
-                    Посмотреть диалоги
+                    \u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0434\u0438\u0430\u043B\u043E\u0433\u0438
                 </button>
             </td>
         `;
@@ -741,7 +741,7 @@ function renderTable(rows) {
 
 function formatDuration(ms) {
     if (!ms || ms <= 0) {
-        return "0 мин";
+        return "0 \u043C\u0438\u043D";
     }
 
     const totalSeconds = Math.round(ms / 1000);
@@ -750,28 +750,28 @@ function formatDuration(ms) {
     const seconds = totalSeconds % 60;
 
     if (hours > 0) {
-        return `${hours} ч ${minutes} мин`;
+        return `${hours} \u0447 ${minutes} \u043C\u0438\u043D`;
     }
 
     if (minutes > 0) {
-        return `${minutes} мин ${seconds} сек`;
+        return `${minutes} \u043C\u0438\u043D ${seconds} \u0441\u0435\u043A`;
     }
 
-    return `${seconds} сек`;
+    return `${seconds} \u0441\u0435\u043A`;
 }
 
 // ===============================
-// Читабельные диалоги
+// \u0427\u0438\u0442\u0430\u0431\u0435\u043B\u044C\u043D\u044B\u0435 \u0434\u0438\u0430\u043B\u043E\u0433\u0438
 // ===============================
 
 function openReadableDialogsModal(employeeName) {
     if (!rawData || !rawData.Dialogs) {
-        alert("Данные не загружены.");
+        alert("\u0414\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B.");
         return;
     }
 
     if (!dialogsModal || !dialogsModalBody) {
-        alert("Модальное окно для просмотра диалогов не найдено в index.html.");
+        alert("\u041C\u043E\u0434\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u043A\u043D\u043E \u0434\u043B\u044F \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u0434\u0438\u0430\u043B\u043E\u0433\u043E\u0432 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u0432 index.html.");
         return;
     }
 
@@ -794,9 +794,9 @@ function openReadableDialogsModal(employeeName) {
             }).length;
 
             return {
-                id: dialog.DialogID || "Без ID",
-                author: dialog.DialogAuthor || "Автор не указан",
-                line: dialog.DialogLine || "Линия не указана",
+                id: dialog.DialogID || "\u0411\u0435\u0437 ID",
+                author: dialog.DialogAuthor || "\u0410\u0432\u0442\u043E\u0440 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D",
+                line: dialog.DialogLine || "\u041B\u0438\u043D\u0438\u044F \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430",
                 messages,
                 employeeMessagesCount
             };
@@ -811,15 +811,15 @@ function openReadableDialogsModal(employeeName) {
         return sum + dialog.employeeMessagesCount;
     }, 0);
 
-    dialogsModalTitle.textContent = `Диалоги: ${employeeName}`;
-    dialogsModalSubtitle.textContent = `${dialogs.length} диалогов, ${employeeMessagesTotal} сообщений сотрудника`;
+    dialogsModalTitle.textContent = `\u0414\u0438\u0430\u043B\u043E\u0433\u0438: ${employeeName}`;
+    dialogsModalSubtitle.textContent = `${dialogs.length} \u0434\u0438\u0430\u043B\u043E\u0433\u043E\u0432, ${employeeMessagesTotal} \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430`;
 
     dialogsModalBody.innerHTML = "";
 
     if (dialogs.length === 0) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.textContent = "Диалоги для выбранного сотрудника не найдены.";
+        empty.textContent = "\u0414\u0438\u0430\u043B\u043E\u0433\u0438 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B.";
         dialogsModalBody.appendChild(empty);
         dialogsModal.hidden = false;
         return;
@@ -833,16 +833,16 @@ function openReadableDialogsModal(employeeName) {
         header.className = "dialog-card-header";
 
         const title = document.createElement("h3");
-        title.textContent = `Диалог ${index + 1}`;
+        title.textContent = `\u0414\u0438\u0430\u043B\u043E\u0433 ${index + 1}`;
 
         const meta = document.createElement("div");
         meta.className = "dialog-meta";
         meta.innerHTML = `
             <div><b>ID:</b> ${escapeHtml(dialog.id)}</div>
-            <div><b>Линия:</b> ${escapeHtml(dialog.line)}</div>
-            <div><b>Автор диалога:</b> ${escapeHtml(dialog.author)}</div>
-            <div><b>Период сообщений:</b> ${escapeHtml(getDialogPeriodText(dialog.messages))}</div>
-            <div><b>Сообщений сотрудника в этом диалоге:</b> ${dialog.employeeMessagesCount}</div>
+            <div><b>\u041B\u0438\u043D\u0438\u044F:</b> ${escapeHtml(dialog.line)}</div>
+            <div><b>\u0410\u0432\u0442\u043E\u0440 \u0434\u0438\u0430\u043B\u043E\u0433\u0430:</b> ${escapeHtml(dialog.author)}</div>
+            <div><b>\u041F\u0435\u0440\u0438\u043E\u0434 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439:</b> ${escapeHtml(getDialogPeriodText(dialog.messages))}</div>
+            <div><b>\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430 \u0432 \u044D\u0442\u043E\u043C \u0434\u0438\u0430\u043B\u043E\u0433\u0435:</b> ${dialog.employeeMessagesCount}</div>
         `;
 
         header.appendChild(title);
@@ -873,11 +873,11 @@ function openReadableDialogsModal(employeeName) {
 
             const roleBadge = document.createElement("span");
             roleBadge.className = `message-role ${role.className}`;
-            roleBadge.textContent = isSelectedEmployeeMessage ? "Выбранный сотрудник" : role.label;
+            roleBadge.textContent = isSelectedEmployeeMessage ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A" : role.label;
 
             const authorName = document.createElement("span");
             authorName.className = "author-name";
-            authorName.textContent = message.author || "Автор не указан";
+            authorName.textContent = message.author || "\u0410\u0432\u0442\u043E\u0440 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D";
 
             author.appendChild(roleBadge);
             author.appendChild(authorName);
@@ -929,7 +929,7 @@ function getMessageRole(message, employeeCompany) {
     if (message.isSystem) {
         return {
             type: "system",
-            label: "Система",
+            label: "\u0421\u0438\u0441\u0442\u0435\u043C\u0430",
             className: "role-system"
         };
     }
@@ -937,35 +937,35 @@ function getMessageRole(message, employeeCompany) {
     if (isEmployeeMessage(message, employeeCompany)) {
         return {
             type: "employee",
-            label: "Сотрудник",
+            label: "\u0421\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A",
             className: "role-employee"
         };
     }
 
     return {
         type: "client",
-        label: "Партнёр / клиент",
+        label: "\u041F\u0430\u0440\u0442\u043D\u0451\u0440 / \u043A\u043B\u0438\u0435\u043D\u0442",
         className: "role-client"
     };
 }
 
 function getDialogPeriodText(messages) {
     if (!messages || messages.length === 0) {
-        return "нет сообщений";
+        return "\u043D\u0435\u0442 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439";
     }
 
     const first = messages[0].date;
     const last = messages[messages.length - 1].date;
 
     if (!first || !last) {
-        return "нет дат";
+        return "\u043D\u0435\u0442 \u0434\u0430\u0442";
     }
 
     if (first.getTime() === last.getTime()) {
         return formatDateTime(first);
     }
 
-    return `${formatDateTime(first)} — ${formatDateTime(last)}`;
+    return `${formatDateTime(first)} \u2014 ${formatDateTime(last)}`;
 }
 
 function formatDateTime(date) {
@@ -984,26 +984,26 @@ function formatDateTime(date) {
 }
 
 // ===============================
-// Экспорт CSV
+// \u042D\u043A\u0441\u043F\u043E\u0440\u0442 CSV
 // ===============================
 
 function exportCsv() {
     if (!analysisResult || analysisResult.length === 0) {
-        alert("Нет данных для экспорта.");
+        alert("\u041D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445 \u0434\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430.");
         return;
     }
 
     const rows = [];
 
     rows.push([
-        "Сотрудник",
-        "Диалогов",
-        "Сообщений",
-        "Активное время, минут",
-        "Активное время",
-        "Среднее на диалог, минут",
-        "Среднее на сообщение, минут",
-        "Линии"
+        "\u0421\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A",
+        "\u0414\u0438\u0430\u043B\u043E\u0433\u043E\u0432",
+        "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439",
+        "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F, \u043C\u0438\u043D\u0443\u0442",
+        "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F",
+        "\u0421\u0440\u0435\u0434\u043D\u0435\u0435 \u043D\u0430 \u0434\u0438\u0430\u043B\u043E\u0433, \u043C\u0438\u043D\u0443\u0442",
+        "\u0421\u0440\u0435\u0434\u043D\u0435\u0435 \u043D\u0430 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435, \u043C\u0438\u043D\u0443\u0442",
+        "\u041B\u0438\u043D\u0438\u0438"
     ]);
 
     analysisResult.forEach(row => {
@@ -1065,7 +1065,7 @@ function escapeHtml(value) {
 }
 
 // ===============================
-// ОСНОВНЫЕ ВКЛАДКИ
+// \u041E\u0421\u041D\u041E\u0412\u041D\u042B\u0415 \u0412\u041A\u041B\u0410\u0414\u041A\u0418
 // ===============================
 
 const employeesMainTab = document.getElementById("employeesMainTab");
@@ -1085,42 +1085,42 @@ function switchMainSection(section) {
 }
 
 // ===============================
-// ЗАЯВКИ: СПРАВОЧНИК НОРМАТИВОВ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0421\u041F\u0420\u0410\u0412\u041E\u0427\u041D\u0418\u041A \u041D\u041E\u0420\u041C\u0410\u0422\u0418\u0412\u041E\u0412
 // ===============================
 
 const DEFAULT_TICKET_CATEGORIES = [
-    { key: "client_database_import_export", group: "2 линия (вопросы клиентов)", name: "Выполнение загрузки или выгрузки базы (ручное)", names: "Выполнение загрузки или выгрузки базы (ручное) | Загрузка базы | Выгрузка базы", minutes: 60 },
-    { key: "client_database_update", group: "2 линия (вопросы клиентов)", name: "Выполнение обновления базы (ручное)", names: "Выполнение обновления базы (ручное) | Обновить конфигурацию | Обновление конфигурации", minutes: 60 },
-    { key: "client_background_tasks", group: "2 линия (вопросы клиентов)", name: "Проблема с выполнением ЗМ, ЗО или Переноса баз", names: "Проблема с выполнением ЗМ, ЗО или Переноса баз", minutes: 15 },
-    { key: "client_database_problem", group: "2 линия (вопросы клиентов)", name: "Проблема в базе 1С", names: "Проблема в базе 1С | Ошибка в базе", minutes: 30 },
-    { key: "client_database_login", group: "2 линия (вопросы клиентов)", name: "Проблема со входом в базу 1С", names: "Проблема со входом в базу 1С | Недоступность базы", minutes: 15 },
-    { key: "client_exchange_transport", group: "2 линия (вопросы клиентов)", name: "Проблема с транспортом обмена между базами 1С", names: "Проблема с транспортом обмена между базами 1С | Пролема с транспортом обмена между базами 1С", minutes: 30 },
-    { key: "client_industry_licenses", group: "2 линия (вопросы клиентов)", name: "Проблема с отраслевыми лицензиями (СЛК, Рарус, Бит и пр.)", names: "Проблема с отраслевыми лицензиями (СЛК, Рарус, Бит и пр.)", minutes: 15 },
-    { key: "client_remote_desktop", group: "2 линия (вопросы клиентов)", name: "Проблема с удаленным рабочим столом (RDS, АльтРД)", names: "Проблема с удаленным рабочим столом (RDS, АльтРД)", minutes: 30 },
-    { key: "client_publication", group: "2 линия (вопросы клиентов)", name: "Создание или изменение публикации базы (ручное)", names: "Создание или изменение публикации базы (ручное)", minutes: 30 },
-    { key: "client_access", group: "2 линия (вопросы клиентов)", name: "Предоставление доступа / сброс пароля (RDS, FTP)", names: "Предоставление доступа / сброс пароля (RDS, FTP) | Создать пользователя RDS | Создать пользвателя RDS", minutes: 15 },
-    { key: "client_release", group: "2 линия (вопросы клиентов)", name: "Добавление отсутствующего релиза в УС", names: "Добавление отсутствующего релиза в УС | Добавление отсутсвующего релиза в УС", minutes: 15 },
-    { key: "client_consultation", group: "2 линия (вопросы клиентов)", name: "Консультация по техническим вопросам", names: "Консультация по техническим вопросам | Консультация", minutes: 30 },
-    { key: "client_other", group: "2 линия (вопросы клиентов)", name: "Другая задача", names: "Другая задача | Другое", minutes: 15 },
-    { key: "internal_access", group: "2 линия (внутренние вопросы)", name: "Предоставление доступа / сброс пароля", names: "Предоставление доступа / сброс пароля | Смена пароля", minutes: 15 },
-    { key: "internal_equipment", group: "2 линия (внутренние вопросы)", name: "Проблема с оборудованием на рабочем месте", names: "Проблема с оборудованием на рабочем месте | Оборудование рабочего места | Рабочее место сотрудника", minutes: 15 },
-    { key: "internal_telephony", group: "2 линия (внутренние вопросы)", name: "Проблема с телефонией на рабочем месте", names: "Проблема с телефонией на рабочем месте | Проблемы с телефонией", minutes: 15 },
-    { key: "internal_network", group: "2 линия (внутренние вопросы)", name: "Проблема с сетевым оборудованием или оргтехникой", names: "Проблема с сетевым оборудованием или оргтехникой | Сетевые и серверные вопросы | Оргтехника", minutes: 15 },
-    { key: "internal_external_service", group: "2 линия (внутренние вопросы)", name: "Проблема со сторонним сервисом (Интернет, телефония, сервисы подрядчиков и пр.)", names: "Проблема со сторонним сервисом (Интернет, телефония, сервисы подрядчиков и пр.)", minutes: 60 },
-    { key: "internal_workplace", group: "2 линия (внутренние вопросы)", name: "Подготовка нового рабочего места", names: "Подготовка нового рабочего места | Подключение к рабочей среде нового сотрудника", minutes: 120 },
-    { key: "internal_other", group: "2 линия (внутренние вопросы)", name: "Другая задача", names: "Другая задача | Другое", minutes: 15 }
+    { key: "client_database_import_export", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0438\u043B\u0438 \u0432\u044B\u0433\u0440\u0443\u0437\u043A\u0438 \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435)", names: "\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0438\u043B\u0438 \u0432\u044B\u0433\u0440\u0443\u0437\u043A\u0438 \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435) | \u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0431\u0430\u0437\u044B | \u0412\u044B\u0433\u0440\u0443\u0437\u043A\u0430 \u0431\u0430\u0437\u044B", minutes: 60 },
+    { key: "client_database_update", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435)", names: "\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435) | \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044E | \u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438", minutes: 60 },
+    { key: "client_background_tasks", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435\u043C \u0417\u041C, \u0417\u041E \u0438\u043B\u0438 \u041F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u0431\u0430\u0437", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435\u043C \u0417\u041C, \u0417\u041E \u0438\u043B\u0438 \u041F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u0431\u0430\u0437", minutes: 15 },
+    { key: "client_database_problem", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0432 \u0431\u0430\u0437\u0435 1\u0421", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0432 \u0431\u0430\u0437\u0435 1\u0421 | \u041E\u0448\u0438\u0431\u043A\u0430 \u0432 \u0431\u0430\u0437\u0435", minutes: 30 },
+    { key: "client_database_login", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441\u043E \u0432\u0445\u043E\u0434\u043E\u043C \u0432 \u0431\u0430\u0437\u0443 1\u0421", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441\u043E \u0432\u0445\u043E\u0434\u043E\u043C \u0432 \u0431\u0430\u0437\u0443 1\u0421 | \u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C \u0431\u0430\u0437\u044B", minutes: 15 },
+    { key: "client_exchange_transport", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u043E\u043C \u043E\u0431\u043C\u0435\u043D\u0430 \u043C\u0435\u0436\u0434\u0443 \u0431\u0430\u0437\u0430\u043C\u0438 1\u0421", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u043E\u043C \u043E\u0431\u043C\u0435\u043D\u0430 \u043C\u0435\u0436\u0434\u0443 \u0431\u0430\u0437\u0430\u043C\u0438 1\u0421 | \u041F\u0440\u043E\u043B\u0435\u043C\u0430 \u0441 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u043E\u043C \u043E\u0431\u043C\u0435\u043D\u0430 \u043C\u0435\u0436\u0434\u0443 \u0431\u0430\u0437\u0430\u043C\u0438 1\u0421", minutes: 30 },
+    { key: "client_industry_licenses", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u043C\u0438 \u043B\u0438\u0446\u0435\u043D\u0437\u0438\u044F\u043C\u0438 (\u0421\u041B\u041A, \u0420\u0430\u0440\u0443\u0441, \u0411\u0438\u0442 \u0438 \u043F\u0440.)", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u043C\u0438 \u043B\u0438\u0446\u0435\u043D\u0437\u0438\u044F\u043C\u0438 (\u0421\u041B\u041A, \u0420\u0430\u0440\u0443\u0441, \u0411\u0438\u0442 \u0438 \u043F\u0440.)", minutes: 15 },
+    { key: "client_remote_desktop", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0443\u0434\u0430\u043B\u0435\u043D\u043D\u044B\u043C \u0440\u0430\u0431\u043E\u0447\u0438\u043C \u0441\u0442\u043E\u043B\u043E\u043C (RDS, \u0410\u043B\u044C\u0442\u0420\u0414)", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0443\u0434\u0430\u043B\u0435\u043D\u043D\u044B\u043C \u0440\u0430\u0431\u043E\u0447\u0438\u043C \u0441\u0442\u043E\u043B\u043E\u043C (RDS, \u0410\u043B\u044C\u0442\u0420\u0414)", minutes: 30 },
+    { key: "client_publication", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438 \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435)", names: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438 \u0431\u0430\u0437\u044B (\u0440\u0443\u0447\u043D\u043E\u0435)", minutes: 30 },
+    { key: "client_access", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0430 / \u0441\u0431\u0440\u043E\u0441 \u043F\u0430\u0440\u043E\u043B\u044F (RDS, FTP)", names: "\u041F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0430 / \u0441\u0431\u0440\u043E\u0441 \u043F\u0430\u0440\u043E\u043B\u044F (RDS, FTP) | \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F RDS | \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u043E\u043B\u044C\u0437\u0432\u0430\u0442\u0435\u043B\u044F RDS", minutes: 15 },
+    { key: "client_release", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u0433\u043E \u0440\u0435\u043B\u0438\u0437\u0430 \u0432 \u0423\u0421", names: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u0433\u043E \u0440\u0435\u043B\u0438\u0437\u0430 \u0432 \u0423\u0421 | \u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u0442\u0441\u0443\u0442\u0441\u0432\u0443\u044E\u0449\u0435\u0433\u043E \u0440\u0435\u043B\u0438\u0437\u0430 \u0432 \u0423\u0421", minutes: 15 },
+    { key: "client_consultation", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u041A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F \u043F\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u043C \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C", names: "\u041A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F \u043F\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u043C \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C | \u041A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F", minutes: 30 },
+    { key: "client_other", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043E\u043F\u0440\u043E\u0441\u044B \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432)", name: "\u0414\u0440\u0443\u0433\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430", names: "\u0414\u0440\u0443\u0433\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430 | \u0414\u0440\u0443\u0433\u043E\u0435", minutes: 15 },
+    { key: "internal_access", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0430 / \u0441\u0431\u0440\u043E\u0441 \u043F\u0430\u0440\u043E\u043B\u044F", names: "\u041F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u0430 / \u0441\u0431\u0440\u043E\u0441 \u043F\u0430\u0440\u043E\u043B\u044F | \u0421\u043C\u0435\u043D\u0430 \u043F\u0430\u0440\u043E\u043B\u044F", minutes: 15 },
+    { key: "internal_equipment", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0430 \u0440\u0430\u0431\u043E\u0447\u0435\u043C \u043C\u0435\u0441\u0442\u0435", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0430 \u0440\u0430\u0431\u043E\u0447\u0435\u043C \u043C\u0435\u0441\u0442\u0435 | \u041E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0447\u0435\u0433\u043E \u043C\u0435\u0441\u0442\u0430 | \u0420\u0430\u0431\u043E\u0447\u0435\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430", minutes: 15 },
+    { key: "internal_telephony", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438\u0435\u0439 \u043D\u0430 \u0440\u0430\u0431\u043E\u0447\u0435\u043C \u043C\u0435\u0441\u0442\u0435", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438\u0435\u0439 \u043D\u0430 \u0440\u0430\u0431\u043E\u0447\u0435\u043C \u043C\u0435\u0441\u0442\u0435 | \u041F\u0440\u043E\u0431\u043B\u0435\u043C\u044B \u0441 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438\u0435\u0439", minutes: 15 },
+    { key: "internal_network", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0441\u0435\u0442\u0435\u0432\u044B\u043C \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435\u043C \u0438\u043B\u0438 \u043E\u0440\u0433\u0442\u0435\u0445\u043D\u0438\u043A\u043E\u0439", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u0441\u0435\u0442\u0435\u0432\u044B\u043C \u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u0438\u0435\u043C \u0438\u043B\u0438 \u043E\u0440\u0433\u0442\u0435\u0445\u043D\u0438\u043A\u043E\u0439 | \u0421\u0435\u0442\u0435\u0432\u044B\u0435 \u0438 \u0441\u0435\u0440\u0432\u0435\u0440\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B | \u041E\u0440\u0433\u0442\u0435\u0445\u043D\u0438\u043A\u0430", minutes: 15 },
+    { key: "internal_external_service", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441\u043E \u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u043C \u0441\u0435\u0440\u0432\u0438\u0441\u043E\u043C (\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442, \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438\u044F, \u0441\u0435\u0440\u0432\u0438\u0441\u044B \u043F\u043E\u0434\u0440\u044F\u0434\u0447\u0438\u043A\u043E\u0432 \u0438 \u043F\u0440.)", names: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430 \u0441\u043E \u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u043C \u0441\u0435\u0440\u0432\u0438\u0441\u043E\u043C (\u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442, \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438\u044F, \u0441\u0435\u0440\u0432\u0438\u0441\u044B \u043F\u043E\u0434\u0440\u044F\u0434\u0447\u0438\u043A\u043E\u0432 \u0438 \u043F\u0440.)", minutes: 60 },
+    { key: "internal_workplace", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0430 \u043D\u043E\u0432\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0447\u0435\u0433\u043E \u043C\u0435\u0441\u0442\u0430", names: "\u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0430 \u043D\u043E\u0432\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0447\u0435\u0433\u043E \u043C\u0435\u0441\u0442\u0430 | \u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0440\u0435\u0434\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430", minutes: 120 },
+    { key: "internal_other", group: "2 \u043B\u0438\u043D\u0438\u044F (\u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B)", name: "\u0414\u0440\u0443\u0433\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430", names: "\u0414\u0440\u0443\u0433\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430 | \u0414\u0440\u0443\u0433\u043E\u0435", minutes: 15 }
 ];
 
 const TICKET_CATEGORIES_STORAGE_KEY = "timeExtractor.ticketCategories.v2";
 let ticketCategories = loadTicketCategories();
 
 // ===============================
-// ЗАЯВКИ: ПРОИЗВОДСТВЕННЫЙ КАЛЕНДАРЬ РФ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u041F\u0420\u041E\u0418\u0417\u0412\u041E\u0414\u0421\u0422\u0412\u0415\u041D\u041D\u042B\u0419 \u041A\u0410\u041B\u0415\u041D\u0414\u0410\u0420\u042C \u0420\u0424
 // ===============================
 
-// Пятидневная 40-часовая рабочая неделя.
-// 2026: Постановление Правительства РФ от 24.09.2025 № 1466.
-// Сокращение предпраздничного рабочего дня на 1 час — ст. 95 ТК РФ.
+// \u041F\u044F\u0442\u0438\u0434\u043D\u0435\u0432\u043D\u0430\u044F 40-\u0447\u0430\u0441\u043E\u0432\u0430\u044F \u0440\u0430\u0431\u043E\u0447\u0430\u044F \u043D\u0435\u0434\u0435\u043B\u044F.
+// 2026: \u041F\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u041F\u0440\u0430\u0432\u0438\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0420\u0424 \u043E\u0442 24.09.2025 \u2116 1466.
+// \u0421\u043E\u043A\u0440\u0430\u0449\u0435\u043D\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u0440\u0430\u0437\u0434\u043D\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0447\u0435\u0433\u043E \u0434\u043D\u044F \u043D\u0430 1 \u0447\u0430\u0441 \u2014 \u0441\u0442. 95 \u0422\u041A \u0420\u0424.
 const RU_PRODUCTION_CALENDAR = {
     2026: {
         daysOff: new Set([
@@ -1144,7 +1144,7 @@ const RU_PRODUCTION_CALENDAR = {
 };
 
 // ===============================
-// ЗАЯВКИ: СОСТОЯНИЕ И DOM
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0421\u041E\u0421\u0422\u041E\u042F\u041D\u0418\u0415 \u0418 DOM
 // ===============================
 
 let ticketSourceMode = "file";
@@ -1210,6 +1210,7 @@ const ticketHttpIncludeCancelled = document.getElementById("ticketHttpIncludeCan
 const loadTicketsHttpBtn = document.getElementById("loadTicketsHttpBtn");
 const analyzeTicketsBtn = document.getElementById("analyzeTicketsBtn");
 const exportTicketsBtn = document.getElementById("exportTicketsBtn");
+const exportTicketsCategoriesBtn = document.getElementById("exportTicketsCategoriesBtn");
 const exportTicketsPdfBtn = document.getElementById("exportTicketsPdfBtn");
 const ticketLoadStatus = document.getElementById("ticketLoadStatus");
 const categoriesBody = document.getElementById("categoriesBody");
@@ -1251,6 +1252,7 @@ function initTicketsModule() {
     loadTicketsHttpBtn.addEventListener("click", loadTicketsByHttp);
     analyzeTicketsBtn.addEventListener("click", runTicketAnalysis);
     exportTicketsBtn.addEventListener("click", exportTicketsCsv);
+    exportTicketsCategoriesBtn.addEventListener("click", exportTicketsExcelWithCategories);
     exportTicketsPdfBtn.addEventListener("click", exportTicketReportPdf);
     addCategoryBtn.addEventListener("click", addTicketCategory);
     resetCategoriesBtn.addEventListener("click", resetTicketCategories);
@@ -1298,7 +1300,7 @@ function switchTicketSource(source) {
     prepareTicketWorkHours();
     showTicketStatus(
         ticketDatasets[source].length > 0
-            ? `Загружено заявок: ${ticketDatasets[source].length}. Событий статусов: ${ticketHistoryDatasets[source].length}.`
+            ? `\u0417\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E \u0437\u0430\u044F\u0432\u043E\u043A: ${ticketDatasets[source].length}. \u0421\u043E\u0431\u044B\u0442\u0438\u0439 \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432: ${ticketHistoryDatasets[source].length}.`
             : "",
         false
     );
@@ -1315,14 +1317,14 @@ function fillTicketHttpLines() {
             option.textContent = line.name;
             ticketHttpLine.appendChild(option);
         });
-    const defaultLine = CONNECT_LINES.find(line => line.name === "ALTAPP Внутренняя");
+    const defaultLine = CONNECT_LINES.find(line => line.name === "ALTAPP \u0412\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u044F\u044F");
     if (defaultLine) {
         ticketHttpLine.value = defaultLine.id;
     }
 }
 
 // ===============================
-// ЗАЯВКИ: ЗАГРУЗКА ФАЙЛА
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0417\u0410\u0413\u0420\u0423\u0417\u041A\u0410 \u0424\u0410\u0419\u041B\u0410
 // ===============================
 
 async function handleTicketFileUpload(event) {
@@ -1337,12 +1339,12 @@ async function handleTicketFileUpload(event) {
         setTicketDataset("file", rows);
         populateTicketFileFilters(ticketDatasets.file);
         prepareTicketWorkHours();
-        showTicketStatus(`Файл «${file.name}» загружен. Найдено заявок: ${ticketDatasets.file.length}. Загрузите историю смены статусов и укажите отработанные часы.`, false);
+        showTicketStatus(`\u0424\u0430\u0439\u043B \u00AB${file.name}\u00BB \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D. \u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0437\u0430\u044F\u0432\u043E\u043A: ${ticketDatasets.file.length}. \u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u043C\u0435\u043D\u044B \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432 \u0438 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\u0435 \u0447\u0430\u0441\u044B.`, false);
     } catch (error) {
         console.error(error);
         ticketDatasets.file = [];
         analyzeTicketsBtn.disabled = true;
-        showTicketStatus("Не удалось прочитать файл: " + error.message, true);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0444\u0430\u0439\u043B: " + error.message, true);
     }
 }
 
@@ -1353,12 +1355,12 @@ async function handleTicketHistoryFileUpload(event) {
     try {
         const rows = await readTabularFile(file, data => extractStatusHistoryRows(data, true), "history");
         setTicketHistoryDataset("file", rows);
-        showTicketStatus(`История «${file.name}» загружена. Найдено событий: ${ticketHistoryDatasets.file.length}.`, false);
+        showTicketStatus(`\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u00AB${file.name}\u00BB \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u0430. \u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u043E\u0431\u044B\u0442\u0438\u0439: ${ticketHistoryDatasets.file.length}.`, false);
         resetTicketResults();
     } catch (error) {
         console.error(error);
         ticketHistoryDatasets.file = [];
-        showTicketStatus("Не удалось прочитать историю статусов: " + error.message, true);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432: " + error.message, true);
     }
 }
 
@@ -1380,8 +1382,8 @@ async function readTabularFile(file, jsonExtractor, tableKind = "generic") {
     if (!detected) {
         throw new Error(
             tableKind === "history"
-                ? "Не удалось найти строку заголовков истории статусов. Нужны поля «Период», ID/номер заявки и новый статус."
-                : "Не удалось найти строку заголовков заявок. Проверьте структуру Excel-файла."
+                ? "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0441\u0442\u0440\u043E\u043A\u0443 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u043E\u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432. \u041D\u0443\u0436\u043D\u044B \u043F\u043E\u043B\u044F \u00AB\u041F\u0435\u0440\u0438\u043E\u0434\u00BB, ID/\u043D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438 \u0438 \u043D\u043E\u0432\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441."
+                : "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043D\u0430\u0439\u0442\u0438 \u0441\u0442\u0440\u043E\u043A\u0443 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u043E\u0432 \u0437\u0430\u044F\u0432\u043E\u043A. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443 Excel-\u0444\u0430\u0439\u043B\u0430."
         );
     }
 
@@ -1416,25 +1418,25 @@ function findTableHeaderRowIndex(matrix, tableKind) {
 
     for (let index = 0; index < maxRowsToCheck; index += 1) {
         const values = (matrix[index] || [])
-            .map(value => normalizeText(value).replaceAll("ё", "е"))
+            .map(value => normalizeText(value).replaceAll("\u0451", "\u0435"))
             .filter(Boolean);
 
         if (values.length === 0) continue;
 
-        const hasAny = variants => variants.some(variant => values.includes(normalizeText(variant).replaceAll("ё", "е")));
+        const hasAny = variants => variants.some(variant => values.includes(normalizeText(variant).replaceAll("\u0451", "\u0435")));
 
         if (tableKind === "history") {
-            const hasPeriod = hasAny(["Период", "Дата", "Дата изменения"]);
-            const hasTicketLink = hasAny(["Идентификатор заявки", "ID заявки", "Id заявки", "№ заявки", "Номер заявки", "TicketID", "ticketId"]);
-            const hasNewStatus = hasAny(["Новое значение", "Новый статус", "NewStatus", "newStatus"]);
+            const hasPeriod = hasAny(["\u041F\u0435\u0440\u0438\u043E\u0434", "\u0414\u0430\u0442\u0430", "\u0414\u0430\u0442\u0430 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F"]);
+            const hasTicketLink = hasAny(["\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "ID \u0437\u0430\u044F\u0432\u043A\u0438", "Id \u0437\u0430\u044F\u0432\u043A\u0438", "\u2116 \u0437\u0430\u044F\u0432\u043A\u0438", "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "TicketID", "ticketId"]);
+            const hasNewStatus = hasAny(["\u041D\u043E\u0432\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435", "\u041D\u043E\u0432\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", "NewStatus", "newStatus"]);
             if (hasPeriod && hasTicketLink && hasNewStatus) return index;
             continue;
         }
 
         if (tableKind === "tickets") {
-            const hasCreated = hasAny(["Время создания", "Дата создания", "CreatedAt", "createdAt"]);
-            const hasEmployee = hasAny(["Исполнитель", "Assignee", "Employee", "responsible"]);
-            const hasIdentity = hasAny(["Идентификатор заявки", "ID заявки", "№ заявки", "Номер заявки", "TicketID", "ticketId"]);
+            const hasCreated = hasAny(["\u0412\u0440\u0435\u043C\u044F \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u044F", "\u0414\u0430\u0442\u0430 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u044F", "CreatedAt", "createdAt"]);
+            const hasEmployee = hasAny(["\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", "Assignee", "Employee", "responsible"]);
+            const hasIdentity = hasAny(["\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "ID \u0437\u0430\u044F\u0432\u043A\u0438", "\u2116 \u0437\u0430\u044F\u0432\u043A\u0438", "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "TicketID", "ticketId"]);
             if (hasCreated && hasEmployee && hasIdentity) return index;
             continue;
         }
@@ -1463,15 +1465,15 @@ async function ensureXlsxLibrary() {
     } catch (error) {
         xlsxLibraryLoadingPromise = null;
         throw new Error(
-            "Не удалось загрузить библиотеку для чтения Excel. " +
-            "Проверьте подключение к интернету или запустите приложение через npm start."
+            "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F Excel. " +
+            "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0443 \u0438\u043B\u0438 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0435 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0447\u0435\u0440\u0435\u0437 npm start."
         );
     }
 
     if (typeof XLSX === "undefined") {
         xlsxLibraryLoadingPromise = null;
         throw new Error(
-            "Библиотека Excel загрузилась некорректно. Обновите страницу и повторите попытку."
+            "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 Excel \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C \u043D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0438 \u043F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u043E\u043F\u044B\u0442\u043A\u0443."
         );
     }
 }
@@ -1495,7 +1497,7 @@ function loadScript(src) {
         script.src = src;
         script.async = true;
         script.onload = () => resolve();
-        script.onerror = () => reject(new Error(`Не удалось загрузить ${src}`));
+        script.onerror = () => reject(new Error(`\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C ${src}`));
         document.head.appendChild(script);
     });
 }
@@ -1504,7 +1506,7 @@ function populateTicketFileFilters(tickets) {
     const lines = Array.from(new Set(tickets.map(ticket => ticket.line).filter(Boolean)))
         .sort((a, b) => a.localeCompare(b, "ru"));
 
-    ticketFileLine.innerHTML = '<option value="">Все линии</option>';
+    ticketFileLine.innerHTML = '<option value="">\u0412\u0441\u0435 \u043B\u0438\u043D\u0438\u0438</option>';
     lines.forEach(line => {
         const option = document.createElement("option");
         option.value = line;
@@ -1521,7 +1523,7 @@ function populateTicketFileFilters(tickets) {
 }
 
 // ===============================
-// ЗАЯВКИ: HTTP
+// \u0417\u0410\u042F\u0412\u041A\u0418: HTTP
 // ===============================
 
 async function loadTicketsByHttp() {
@@ -1534,16 +1536,16 @@ async function loadTicketsByHttp() {
     const password = ticketApiPassword.value;
 
     if (!apiUrl || !dateFrom || !dateTo || !lineId || !login || !password) {
-        showTicketStatus("Заполните URL, период, линию, логин и пароль.", true);
+        showTicketStatus("\u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 URL, \u043F\u0435\u0440\u0438\u043E\u0434, \u043B\u0438\u043D\u0438\u044E, \u043B\u043E\u0433\u0438\u043D \u0438 \u043F\u0430\u0440\u043E\u043B\u044C.", true);
         return;
     }
     if (dateFrom > dateTo) {
-        showTicketStatus("Дата начала периода не может быть позже даты окончания.", true);
+        showTicketStatus("\u0414\u0430\u0442\u0430 \u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0435\u0440\u0438\u043E\u0434\u0430 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u0437\u0436\u0435 \u0434\u0430\u0442\u044B \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F.", true);
         return;
     }
 
     loadTicketsHttpBtn.disabled = true;
-    loadTicketsHttpBtn.textContent = "Загружаю заявки...";
+    loadTicketsHttpBtn.textContent = "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u044E \u0437\u0430\u044F\u0432\u043A\u0438...";
     showTicketStatus("", false);
 
     try {
@@ -1557,16 +1559,16 @@ async function loadTicketsByHttp() {
         }
         setTicketHistoryDataset("http", historyRows);
         prepareTicketWorkHours();
-        showTicketStatus(`Данные загружены. Заявок: ${ticketDatasets.http.length}. Событий статусов: ${ticketHistoryDatasets.http.length}. Укажите отработанные часы сотрудников.`, false);
+        showTicketStatus(`\u0414\u0430\u043D\u043D\u044B\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B. \u0417\u0430\u044F\u0432\u043E\u043A: ${ticketDatasets.http.length}. \u0421\u043E\u0431\u044B\u0442\u0438\u0439 \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432: ${ticketHistoryDatasets.http.length}. \u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\u0435 \u0447\u0430\u0441\u044B \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432.`, false);
     } catch (error) {
         console.error(error);
         ticketDatasets.http = [];
         ticketHistoryDatasets.http = [];
         analyzeTicketsBtn.disabled = true;
-        showTicketStatus("Не удалось загрузить заявки: " + error.message, true);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0437\u0430\u044F\u0432\u043A\u0438: " + error.message, true);
     } finally {
         loadTicketsHttpBtn.disabled = false;
-        loadTicketsHttpBtn.textContent = "Загрузить заявки";
+        loadTicketsHttpBtn.textContent = "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0437\u0430\u044F\u0432\u043A\u0438";
     }
 }
 
@@ -1588,44 +1590,44 @@ function extractTicketRows(data) {
         return data;
     }
     if (!data || typeof data !== "object") {
-        throw new Error("В ответе не найден массив заявок.");
+        throw new Error("\u0412 \u043E\u0442\u0432\u0435\u0442\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043C\u0430\u0441\u0441\u0438\u0432 \u0437\u0430\u044F\u0432\u043E\u043A.");
     }
-    const candidateKeys = ["Tickets", "tickets", "Data", "data", "items", "Items", "Заявки"];
+    const candidateKeys = ["Tickets", "tickets", "Data", "data", "items", "Items", "\u0417\u0430\u044F\u0432\u043A\u0438"];
     for (const key of candidateKeys) {
         if (Array.isArray(data[key])) {
             return data[key];
         }
     }
-    throw new Error("Ожидался массив заявок или объект с массивом Tickets, Data либо items.");
+    throw new Error("\u041E\u0436\u0438\u0434\u0430\u043B\u0441\u044F \u043C\u0430\u0441\u0441\u0438\u0432 \u0437\u0430\u044F\u0432\u043E\u043A \u0438\u043B\u0438 \u043E\u0431\u044A\u0435\u043A\u0442 \u0441 \u043C\u0430\u0441\u0441\u0438\u0432\u043E\u043C Tickets, Data \u043B\u0438\u0431\u043E items.");
 }
 
 function extractStatusHistoryRows(data, required) {
     if (Array.isArray(data)) {
-        const looksLikeHistory = data.some(row => getTicketValue(row || {}, ["Новое значение", "Новый статус", "newStatus", "NewStatus"]) !== null);
+        const looksLikeHistory = data.some(row => getTicketValue(row || {}, ["\u041D\u043E\u0432\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435", "\u041D\u043E\u0432\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", "newStatus", "NewStatus"]) !== null);
         if (looksLikeHistory || required) return data;
         return [];
     }
     if (data && typeof data === "object") {
-        const candidateKeys = ["StatusHistory", "statusHistory", "History", "history", "Events", "events", "ИсторияСтатусов"];
+        const candidateKeys = ["StatusHistory", "statusHistory", "History", "history", "Events", "events", "\u0418\u0441\u0442\u043E\u0440\u0438\u044F\u0421\u0442\u0430\u0442\u0443\u0441\u043E\u0432"];
         for (const key of candidateKeys) {
             if (Array.isArray(data[key])) return data[key];
         }
     }
     if (required) {
-        throw new Error("В ответе не найден массив истории смены статусов.");
+        throw new Error("\u0412 \u043E\u0442\u0432\u0435\u0442\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D \u043C\u0430\u0441\u0441\u0438\u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u0441\u043C\u0435\u043D\u044B \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432.");
     }
     return [];
 }
 
 function setTicketDataset(source, rows) {
     if (!Array.isArray(rows)) {
-        throw new Error("Данные заявок должны быть массивом.");
+        throw new Error("\u0414\u0430\u043D\u043D\u044B\u0435 \u0437\u0430\u044F\u0432\u043E\u043A \u0434\u043E\u043B\u0436\u043D\u044B \u0431\u044B\u0442\u044C \u043C\u0430\u0441\u0441\u0438\u0432\u043E\u043C.");
     }
     const normalized = rows
         .map((row, index) => normalizeTicket(row, index))
         .filter(ticket => ticket.id || ticket.number || ticket.createdAt || ticket.employee);
     if (normalized.length === 0) {
-        throw new Error("Не удалось распознать ни одной заявки. Проверьте заголовки столбцов.");
+        throw new Error("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0442\u044C \u043D\u0438 \u043E\u0434\u043D\u043E\u0439 \u0437\u0430\u044F\u0432\u043A\u0438. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438 \u0441\u0442\u043E\u043B\u0431\u0446\u043E\u0432.");
     }
     ticketDatasets[source] = normalized;
     ticketWorkHours = {};
@@ -1639,7 +1641,7 @@ function setTicketDataset(source, rows) {
 
 function setTicketHistoryDataset(source, rows) {
     if (!Array.isArray(rows)) {
-        throw new Error("История статусов должна быть массивом.");
+        throw new Error("\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432 \u0434\u043E\u043B\u0436\u043D\u0430 \u0431\u044B\u0442\u044C \u043C\u0430\u0441\u0441\u0438\u0432\u043E\u043C.");
     }
 
     const normalized = rows
@@ -1648,8 +1650,8 @@ function setTicketHistoryDataset(source, rows) {
 
     if (rows.length > 0 && normalized.length === 0) {
         throw new Error(
-            "Файл прочитан, но события смены статусов не распознаны. " +
-            "Проверьте наличие столбцов «Период», «ID заявки» или «Идентификатор заявки», «Новый статус» или «Новое значение»."
+            "\u0424\u0430\u0439\u043B \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D, \u043D\u043E \u0441\u043E\u0431\u044B\u0442\u0438\u044F \u0441\u043C\u0435\u043D\u044B \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432 \u043D\u0435 \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u043D\u044B. " +
+            "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u043E\u043B\u0431\u0446\u043E\u0432 \u00AB\u041F\u0435\u0440\u0438\u043E\u0434\u00BB, \u00ABID \u0437\u0430\u044F\u0432\u043A\u0438\u00BB \u0438\u043B\u0438 \u00AB\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438\u00BB, \u00AB\u041D\u043E\u0432\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441\u00BB \u0438\u043B\u0438 \u00AB\u041D\u043E\u0432\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u00BB."
         );
     }
 
@@ -1658,44 +1660,44 @@ function setTicketHistoryDataset(source, rows) {
 
 function normalizeTicketStatusEvent(row) {
     return {
-        period: parseTicketDate(getTicketValue(row, ["Период", "period", "Period", "date", "Date", "eventDate"])),
-        ticketId: cleanText(getTicketValue(row, ["Идентификатор заявки", "ID заявки", "Id заявки", "ticketId", "TicketID", "id", "ID"])),
-        ticketNumber: cleanText(getTicketValue(row, ["№ заявки", "Номер заявки", "ticketNumber", "TicketNumber", "number", "Number"])),
-        object: cleanText(getTicketValue(row, ["Объект изменения", "object", "Object", "field", "Field"])),
-        oldStatus: cleanText(getTicketValue(row, ["Старое значение", "Старый статус", "oldStatus", "OldStatus", "oldValue"])),
-        newStatus: cleanText(getTicketValue(row, ["Новое значение", "Новый статус", "newStatus", "NewStatus", "newValue"])),
-        author: cleanText(getTicketValue(row, ["Автор", "Автор изменения", "author", "Author"]))
+        period: parseTicketDate(getTicketValue(row, ["\u041F\u0435\u0440\u0438\u043E\u0434", "period", "Period", "date", "Date", "eventDate"])),
+        ticketId: cleanText(getTicketValue(row, ["\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "ID \u0437\u0430\u044F\u0432\u043A\u0438", "Id \u0437\u0430\u044F\u0432\u043A\u0438", "ticketId", "TicketID", "id", "ID"])),
+        ticketNumber: cleanText(getTicketValue(row, ["\u2116 \u0437\u0430\u044F\u0432\u043A\u0438", "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "ticketNumber", "TicketNumber", "number", "Number"])),
+        object: cleanText(getTicketValue(row, ["\u041E\u0431\u044A\u0435\u043A\u0442 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "object", "Object", "field", "Field"])),
+        oldStatus: cleanText(getTicketValue(row, ["\u0421\u0442\u0430\u0440\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435", "\u0421\u0442\u0430\u0440\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", "oldStatus", "OldStatus", "oldValue"])),
+        newStatus: cleanText(getTicketValue(row, ["\u041D\u043E\u0432\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435", "\u041D\u043E\u0432\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", "newStatus", "NewStatus", "newValue"])),
+        author: cleanText(getTicketValue(row, ["\u0410\u0432\u0442\u043E\u0440", "\u0410\u0432\u0442\u043E\u0440 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "author", "Author"]))
     };
 }
 
 function normalizeTicket(row, index) {
-    const createdValue = getTicketValue(row, ["Время создания", "createdAt", "CreatedAt", "creationDate", "dateCreated"]);
-    const deadlineValue = getTicketValue(row, ["Срок заявки", "deadline", "Deadline", "dueDate", "DueDate"]);
-    const actualValue = getTicketValue(row, ["Длительность работы (сек)", "durationSeconds", "DurationSeconds", "workDuration", "resolutionTime"]);
+    const createdValue = getTicketValue(row, ["\u0412\u0440\u0435\u043C\u044F \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u044F", "createdAt", "CreatedAt", "creationDate", "dateCreated"]);
+    const deadlineValue = getTicketValue(row, ["\u0421\u0440\u043E\u043A \u0437\u0430\u044F\u0432\u043A\u0438", "deadline", "Deadline", "dueDate", "DueDate"]);
+    const actualValue = getTicketValue(row, ["\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u044B (\u0441\u0435\u043A)", "durationSeconds", "DurationSeconds", "workDuration", "resolutionTime"]);
     const actualSeconds = parseNumberValue(actualValue);
-    const completedValue = getTicketValue(row, ["Время завершения", "Дата завершения", "completedAt", "CompletedAt", "closedAt", "ClosedAt"]);
-    const newStatusValue = getTicketValue(row, ["Время статуса Новая", "newAt", "NewAt"]);
+    const completedValue = getTicketValue(row, ["\u0412\u0440\u0435\u043C\u044F \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F", "\u0414\u0430\u0442\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F", "completedAt", "CompletedAt", "closedAt", "ClosedAt"]);
+    const newStatusValue = getTicketValue(row, ["\u0412\u0440\u0435\u043C\u044F \u0441\u0442\u0430\u0442\u0443\u0441\u0430 \u041D\u043E\u0432\u0430\u044F", "newAt", "NewAt"]);
 
     return {
         sourceIndex: index,
-        id: cleanText(getTicketValue(row, ["Идентификатор заявки", "ID заявки", "Id заявки", "id", "ID", "ticketId", "TicketID"])),
-        number: cleanText(getTicketValue(row, ["Номер заявки", "№ заявки", "number", "Number", "ticketNumber"])),
+        id: cleanText(getTicketValue(row, ["\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "ID \u0437\u0430\u044F\u0432\u043A\u0438", "Id \u0437\u0430\u044F\u0432\u043A\u0438", "id", "ID", "ticketId", "TicketID"])),
+        number: cleanText(getTicketValue(row, ["\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "\u2116 \u0437\u0430\u044F\u0432\u043A\u0438", "number", "Number", "ticketNumber"])),
         createdAt: parseTicketDate(createdValue),
-        line: cleanText(getTicketValue(row, ["Линия", "line", "Line", "lineName"])),
-        service: cleanText(getTicketValue(row, ["Вид услуги", "service", "Service", "serviceType"])),
-        category: cleanText(getTicketValue(row, ["Тип заявки", "category", "Category", "ticketType", "type"])),
-        client: cleanText(getTicketValue(row, ["Клиент", "client", "Client"])),
-        initiator: cleanText(getTicketValue(row, ["Инициатор заявки", "initiator", "Initiator"])),
-        employee: cleanText(getTicketValue(row, ["Исполнитель", "employee", "Employee", "assignee", "Assignee", "responsible"])),
-        status: cleanText(getTicketValue(row, ["Статус заявки", "status", "Status"])),
+        line: cleanText(getTicketValue(row, ["\u041B\u0438\u043D\u0438\u044F", "line", "Line", "lineName"])),
+        service: cleanText(getTicketValue(row, ["\u0412\u0438\u0434 \u0443\u0441\u043B\u0443\u0433\u0438", "service", "Service", "serviceType"])),
+        category: cleanText(getTicketValue(row, ["\u0422\u0438\u043F \u0437\u0430\u044F\u0432\u043A\u0438", "category", "Category", "ticketType", "type"])),
+        client: cleanText(getTicketValue(row, ["\u041A\u043B\u0438\u0435\u043D\u0442", "client", "Client"])),
+        initiator: cleanText(getTicketValue(row, ["\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438", "initiator", "Initiator"])),
+        employee: cleanText(getTicketValue(row, ["\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", "employee", "Employee", "assignee", "Assignee", "responsible"])),
+        status: cleanText(getTicketValue(row, ["\u0421\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u044F\u0432\u043A\u0438", "status", "Status"])),
         actualSeconds: Number.isFinite(actualSeconds) && actualSeconds > 0 ? actualSeconds : 0,
         deadlineAt: parseTicketDate(deadlineValue),
         completedAt: parseTicketDate(completedValue),
         newAt: parseTicketDate(newStatusValue),
-        topic: cleanText(getTicketValue(row, ["Тема заявки", "topic", "Topic", "title", "Title"])),
-        problem: cleanText(getTicketValue(row, ["Описание проблемы", "problem", "Problem", "description", "Description"])),
-        solution: cleanText(getTicketValue(row, ["Описание решения", "solution", "Solution"])),
-        priority: cleanText(getTicketValue(row, ["Приоритет", "priority", "Priority"]))
+        topic: cleanText(getTicketValue(row, ["\u0422\u0435\u043C\u0430 \u0437\u0430\u044F\u0432\u043A\u0438", "topic", "Topic", "title", "Title"])),
+        problem: cleanText(getTicketValue(row, ["\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B", "problem", "Problem", "description", "Description"])),
+        solution: cleanText(getTicketValue(row, ["\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F", "solution", "Solution"])),
+        priority: cleanText(getTicketValue(row, ["\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "priority", "Priority"]))
     };
 }
 
@@ -1716,7 +1718,7 @@ function getTicketValue(row, keys) {
 }
 
 // ===============================
-// ЗАЯВКИ: РАСЧЁТ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0420\u0410\u0421\u0427\u0401\u0422
 // ===============================
 
 function prepareTicketWorkHours() {
@@ -1737,7 +1739,7 @@ function prepareTicketWorkHours() {
     const employees = Array.from(new Set(
         filterTicketsBySource(sourceTickets, filters)
             .filter(ticket => isCompletedTicket(ticket.status))
-            .map(ticket => ticket.employee || "Не назначен")
+            .map(ticket => ticket.employee || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D")
     )).sort((a, b) => a.localeCompare(b, "ru"));
 
     ticketWorkHoursBody.innerHTML = "";
@@ -1748,7 +1750,7 @@ function prepareTicketWorkHours() {
             <td>${escapeHtml(employee)}</td>
             <td>${calendar.workingDays}</td>
             <td>${formatHoursNumber(calendar.normHours)}</td>
-            <td><input class="worked-hours-input" type="number" min="0" step="0.25" value="${ticketWorkHours[employee]}" data-employee="${escapeHtml(employee)}" aria-label="Фактически отработанные часы: ${escapeHtml(employee)}"></td>
+            <td><input class="worked-hours-input" type="number" min="0" step="0.25" value="${ticketWorkHours[employee]}" data-employee="${escapeHtml(employee)}" aria-label="\u0424\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\u0435 \u0447\u0430\u0441\u044B: ${escapeHtml(employee)}"></td>
         `;
         ticketWorkHoursBody.appendChild(row);
     });
@@ -1783,24 +1785,24 @@ function filterTicketsBySource(sourceTickets, filters) {
 function runTicketAnalysis() {
     const sourceTickets = ticketDatasets[ticketSourceMode];
     if (!sourceTickets || sourceTickets.length === 0) {
-        showTicketStatus("Сначала загрузите файл или данные из HTTP-сервиса.", true);
+        showTicketStatus("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0444\u0430\u0439\u043B \u0438\u043B\u0438 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438\u0437 HTTP-\u0441\u0435\u0440\u0432\u0438\u0441\u0430.", true);
         return;
     }
 
     const filters = getTicketFilters();
     if (!filters.dateFrom || !filters.dateTo) {
-        showTicketStatus("Укажите период расчёта.", true);
+        showTicketStatus("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434 \u0440\u0430\u0441\u0447\u0451\u0442\u0430.", true);
         return;
     }
     if (filters.dateFrom > filters.dateTo) {
-        showTicketStatus("Дата начала периода не может быть позже даты окончания.", true);
+        showTicketStatus("\u0414\u0430\u0442\u0430 \u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0435\u0440\u0438\u043E\u0434\u0430 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u0437\u0436\u0435 \u0434\u0430\u0442\u044B \u043E\u043A\u043E\u043D\u0447\u0430\u043D\u0438\u044F.", true);
         return;
     }
 
     const filtered = filterTicketsBySource(sourceTickets, filters);
     const completedTickets = filtered.filter(ticket => isCompletedTicket(ticket.status));
     if (completedTickets.length === 0) {
-        showTicketStatus("В выбранном периоде нет завершённых заявок.", true);
+        showTicketStatus("\u0412 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C \u043F\u0435\u0440\u0438\u043E\u0434\u0435 \u043D\u0435\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A.", true);
         resetTicketResults();
         return;
     }
@@ -1814,7 +1816,7 @@ function runTicketAnalysis() {
 
     const employees = new Map();
     completedTickets.forEach(ticket => {
-        const employeeName = ticket.employee || "Не назначен";
+        const employeeName = ticket.employee || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D";
         if (!employees.has(employeeName)) {
             employees.set(employeeName, {
                 employee: employeeName,
@@ -1867,12 +1869,12 @@ function runTicketAnalysis() {
     const unevaluatedDeadlines = ticketAnalysisResult.reduce((sum, row) => sum + row.deadlineCount - row.deadlineEvaluatedCount, 0);
     const linkedWithCompletion = completedTickets.filter(ticket => Boolean(getTicketTimeline(ticket, timelineMap).completedAt || ticket.completedAt)).length;
     const notes = [
-        `В расчёт включено завершённых заявок: ${completedTickets.length}.`,
-        `История статусов: ${ticketHistoryDatasets[ticketSourceMode].length} событий; завершение найдено для ${linkedWithCompletion} заявок.`
+        `\u0412 \u0440\u0430\u0441\u0447\u0451\u0442 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A: ${completedTickets.length}.`,
+        `\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432: ${ticketHistoryDatasets[ticketSourceMode].length} \u0441\u043E\u0431\u044B\u0442\u0438\u0439; \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u0434\u043B\u044F ${linkedWithCompletion} \u0437\u0430\u044F\u0432\u043E\u043A.`
     ];
-    if (withoutNorm > 0) notes.push(`Без найденного норматива: ${withoutNorm}.`);
-    if (withoutLifecycle > 0) notes.push(`Без интервала «Новая → Завершена»: ${withoutLifecycle}.`);
-    if (unevaluatedDeadlines > 0) notes.push(`Дедлайн не удалось оценить: ${unevaluatedDeadlines}.`);
+    if (withoutNorm > 0) notes.push(`\u0411\u0435\u0437 \u043D\u0430\u0439\u0434\u0435\u043D\u043D\u043E\u0433\u043E \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u0430: ${withoutNorm}.`);
+    if (withoutLifecycle > 0) notes.push(`\u0411\u0435\u0437 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B\u0430 \u00AB\u041D\u043E\u0432\u0430\u044F \u2192 \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430\u00BB: ${withoutLifecycle}.`);
+    if (unevaluatedDeadlines > 0) notes.push(`\u0414\u0435\u0434\u043B\u0430\u0439\u043D \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0446\u0435\u043D\u0438\u0442\u044C: ${unevaluatedDeadlines}.`);
     showTicketStatus(notes.join(" "), false);
 }
 
@@ -1889,17 +1891,17 @@ function getTicketFilters() {
 }
 
 function isCancelledTicket(status) {
-    return normalizeText(status).includes("отмен") || normalizeText(status) === "cancelled";
+    return normalizeText(status).includes("\u043E\u0442\u043C\u0435\u043D") || normalizeText(status) === "cancelled";
 }
 
 function isCompletedTicket(status) {
     const normalized = normalizeText(status);
-    return normalized.includes("заверш") || normalized === "completed" || normalized === "closed";
+    return normalized.includes("\u0437\u0430\u0432\u0435\u0440\u0448") || normalized === "completed" || normalized === "closed";
 }
 
 function isNewTicketStatus(status) {
     const normalized = normalizeText(status);
-    return normalized === "новая" || normalized === "new";
+    return normalized === "\u043D\u043E\u0432\u0430\u044F" || normalized === "new";
 }
 
 function buildTicketTimelineMap(events) {
@@ -1914,7 +1916,7 @@ function buildTicketTimelineMap(events) {
 
     (events || []).forEach(event => {
         const object = normalizeText(event.object);
-        if (object && object !== "status" && !object.includes("статус")) return;
+        if (object && object !== "status" && !object.includes("\u0441\u0442\u0430\u0442\u0443\u0441")) return;
         addEvent(event.ticketId, event);
         addEvent(event.ticketNumber, event);
     });
@@ -1962,7 +1964,7 @@ function enrichCompletedTicket(ticket, timelineMap, categories) {
         standardMs,
         actualMs,
         classifiedGroup: classification?.group || "",
-        classifiedCategory: classification?.name || "Не определена",
+        classifiedCategory: classification?.name || "\u041D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430",
         deadlineResult
     };
 }
@@ -1980,8 +1982,8 @@ function getProductionCalendarStats(dateFrom, dateTo) {
     const unsupportedYears = Array.from(years).filter(year => !RU_PRODUCTION_CALENDAR[year]);
     if (unsupportedYears.length > 0) {
         throw new Error(
-            `Для производственного календаря не настроен год: ${unsupportedYears.join(", ")}. ` +
-            "Сейчас в программу встроен официальный календарь РФ на 2026 год."
+            `\u0414\u043B\u044F \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0433\u043E \u043A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044F \u043D\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D \u0433\u043E\u0434: ${unsupportedYears.join(", ")}. ` +
+            "\u0421\u0435\u0439\u0447\u0430\u0441 \u0432 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0443 \u0432\u0441\u0442\u0440\u043E\u0435\u043D \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C \u0420\u0424 \u043D\u0430 2026 \u0433\u043E\u0434."
         );
     }
 
@@ -2041,7 +2043,7 @@ function renderTicketAnalysis() {
     ticketResultBody.innerHTML = "";
     if (ticketAnalysisResult.length === 0) {
         const row = document.createElement("tr");
-        row.innerHTML = '<td colspan="14">Нет завершённых заявок для выбранных фильтров.</td>';
+        row.innerHTML = '<td colspan="14">\u041D\u0435\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0444\u0438\u043B\u044C\u0442\u0440\u043E\u0432.</td>';
         ticketResultBody.appendChild(row);
     } else {
         ticketAnalysisResult.forEach(item => {
@@ -2060,7 +2062,7 @@ function renderTicketAnalysis() {
                 <td>${item.onTimeCount}</td>
                 <td>${item.overdueCount}</td>
                 <td>${formatPercent(item.overduePercent)}</td>
-                <td><button type="button" class="small-button view-tickets-btn" data-employee="${escapeHtml(item.employee)}">Посмотреть</button></td>
+                <td><button type="button" class="small-button view-tickets-btn" data-employee="${escapeHtml(item.employee)}">\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C</button></td>
             `;
             ticketResultBody.appendChild(row);
         });
@@ -2071,6 +2073,7 @@ function renderTicketAnalysis() {
     ticketChartsPanel.hidden = false;
     renderTicketCategoryCharts();
     exportTicketsBtn.disabled = ticketAnalysisResult.length === 0;
+    exportTicketsCategoriesBtn.disabled = ticketAnalysisResult.length === 0;
     exportTicketsPdfBtn.disabled = ticketAnalysisResult.length === 0;
 }
 
@@ -2083,21 +2086,22 @@ function resetTicketResults() {
     ticketResultBody.innerHTML = "";
     clearTicketCategoryCharts();
     exportTicketsBtn.disabled = true;
+    exportTicketsCategoriesBtn.disabled = true;
     exportTicketsPdfBtn.disabled = true;
 }
 
 function formatPercent(value) {
-    if (!Number.isFinite(value)) return "—";
+    if (!Number.isFinite(value)) return "\u2014";
     return new Intl.NumberFormat("ru-RU", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
 }
 
 function formatHoursNumber(value) {
-    if (!Number.isFinite(value)) return "—";
+    if (!Number.isFinite(value)) return "\u2014";
     return new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(value);
 }
 
 // ===============================
-// ЗАЯВКИ: ТАБЛИЦА КАТЕГОРИЙ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0422\u0410\u0411\u041B\u0418\u0426\u0410 \u041A\u0410\u0422\u0415\u0413\u041E\u0420\u0418\u0419
 // ===============================
 
 function loadTicketCategories() {
@@ -2107,7 +2111,7 @@ function loadTicketCategories() {
             return saved;
         }
     } catch (error) {
-        console.warn("Не удалось загрузить сохранённые нормативы", error);
+        console.warn("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u044B", error);
     }
     return DEFAULT_TICKET_CATEGORIES.map(item => ({ ...item }));
 }
@@ -2116,7 +2120,7 @@ function saveTicketCategories() {
     try {
         localStorage.setItem(TICKET_CATEGORIES_STORAGE_KEY, JSON.stringify(ticketCategories));
     } catch (error) {
-        console.warn("Не удалось сохранить нормативы", error);
+        console.warn("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u044B", error);
     }
 }
 
@@ -2126,10 +2130,10 @@ function renderTicketCategories() {
         const row = document.createElement("tr");
         row.dataset.index = String(index);
         row.innerHTML = `
-            <td><input type="text" data-field="group" value="${escapeHtml(category.group || "")}" aria-label="Группа категории"></td>
-            <td><input type="text" data-field="names" value="${escapeHtml(category.names || "")}" aria-label="Названия категории"></td>
-            <td><input type="number" data-field="minutes" value="${Number(category.minutes) || 0}" min="0" step="1" aria-label="Норматив в минутах"></td>
-            <td><button type="button" class="remove-category-btn" title="Удалить категорию" aria-label="Удалить категорию">×</button></td>
+            <td><input type="text" data-field="group" value="${escapeHtml(category.group || "")}" aria-label="\u0413\u0440\u0443\u043F\u043F\u0430 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438"></td>
+            <td><input type="text" data-field="names" value="${escapeHtml(category.names || "")}" aria-label="\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438"></td>
+            <td><input type="number" data-field="minutes" value="${Number(category.minutes) || 0}" min="0" step="1" aria-label="\u041D\u043E\u0440\u043C\u0430\u0442\u0438\u0432 \u0432 \u043C\u0438\u043D\u0443\u0442\u0430\u0445"></td>
+            <td><button type="button" class="remove-category-btn" title="\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044E" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044E">\u00D7</button></td>
         `;
         categoriesBody.appendChild(row);
     });
@@ -2159,7 +2163,7 @@ function handleCategoryAction(event) {
 }
 
 function addTicketCategory() {
-    ticketCategories.push({ key: `custom_${Date.now()}`, group: "", name: "Новая категория", names: "", minutes: 15 });
+    ticketCategories.push({ key: `custom_${Date.now()}`, group: "", name: "\u041D\u043E\u0432\u0430\u044F \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F", names: "", minutes: 15 });
     saveTicketCategories();
     renderTicketCategories();
     categoriesBody.lastElementChild?.querySelector('input[data-field="group"]')?.focus();
@@ -2167,7 +2171,7 @@ function addTicketCategory() {
 }
 
 function resetTicketCategories() {
-    if (!confirm("Вернуть исходный справочник нормативов? Внесённые изменения будут удалены.")) {
+    if (!confirm("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u043E\u0432? \u0412\u043D\u0435\u0441\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0431\u0443\u0434\u0443\u0442 \u0443\u0434\u0430\u043B\u0435\u043D\u044B.")) {
         return;
     }
     ticketCategories = DEFAULT_TICKET_CATEGORIES.map(item => ({ ...item }));
@@ -2189,42 +2193,42 @@ function buildTicketCategoryIndex() {
 
 function classifyTicketCategory(ticket, categories) {
     const ticketType = normalizeText(ticket.category);
-    const text = normalizeText([ticket.category, ticket.topic, ticket.problem, ticket.solution].filter(Boolean).join(" ")).replaceAll("ё", "е");
+    const text = normalizeText([ticket.category, ticket.topic, ticket.problem, ticket.solution].filter(Boolean).join(" ")).replaceAll("\u0451", "\u0435");
     const findByKey = key => categories.find(category => category.key === key) || null;
     const contains = (...terms) => terms.some(term => text.includes(term));
 
-    // Сначала внутренние вопросы, чтобы общие слова «доступ» и «другое» не относились к клиентской группе.
-    if (contains("новый сотрудник", "нового сотрудника", "оборудовать место", "оборудовано место")) {
-        return contains("оборуд", "рабочее место") ? findByKey("internal_workplace") : findByKey("internal_access");
+    // \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B, \u0447\u0442\u043E\u0431\u044B \u043E\u0431\u0449\u0438\u0435 \u0441\u043B\u043E\u0432\u0430 \u00AB\u0434\u043E\u0441\u0442\u0443\u043F\u00BB \u0438 \u00AB\u0434\u0440\u0443\u0433\u043E\u0435\u00BB \u043D\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u043B\u0438\u0441\u044C \u043A \u043A\u043B\u0438\u0435\u043D\u0442\u0441\u043A\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435.
+    if (contains("\u043D\u043E\u0432\u044B\u0439 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A", "\u043D\u043E\u0432\u043E\u0433\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430", "\u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u0442\u044C \u043C\u0435\u0441\u0442\u043E", "\u043E\u0431\u043E\u0440\u0443\u0434\u043E\u0432\u0430\u043D\u043E \u043C\u0435\u0441\u0442\u043E")) {
+        return contains("\u043E\u0431\u043E\u0440\u0443\u0434", "\u0440\u0430\u0431\u043E\u0447\u0435\u0435 \u043C\u0435\u0441\u0442\u043E") ? findByKey("internal_workplace") : findByKey("internal_access");
     }
-    if (contains("принтер", "оргтехник", "сканер")) return findByKey("internal_network");
-    if (contains("телефон", "сипуни", "sipuni", "звонки", "не звонит")) return findByKey("internal_telephony");
-    if (contains("наушник", "lightshot", "скриншот", "звук на компьютер", "звук в науш")) return findByKey("internal_equipment");
-    if (contains("connect", "коннект", "телетайп", "chatgpt", "gmail", "amo crm", "юджайл", "почт", "winscp") && !contains("база", "дамп")) {
-        return contains("доступ", "добав", "учетк", "парол", "войти", "вход") ? findByKey("internal_access") : findByKey("internal_external_service");
+    if (contains("\u043F\u0440\u0438\u043D\u0442\u0435\u0440", "\u043E\u0440\u0433\u0442\u0435\u0445\u043D\u0438\u043A", "\u0441\u043A\u0430\u043D\u0435\u0440")) return findByKey("internal_network");
+    if (contains("\u0442\u0435\u043B\u0435\u0444\u043E\u043D", "\u0441\u0438\u043F\u0443\u043D\u0438", "sipuni", "\u0437\u0432\u043E\u043D\u043A\u0438", "\u043D\u0435 \u0437\u0432\u043E\u043D\u0438\u0442")) return findByKey("internal_telephony");
+    if (contains("\u043D\u0430\u0443\u0448\u043D\u0438\u043A", "lightshot", "\u0441\u043A\u0440\u0438\u043D\u0448\u043E\u0442", "\u0437\u0432\u0443\u043A \u043D\u0430 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440", "\u0437\u0432\u0443\u043A \u0432 \u043D\u0430\u0443\u0448")) return findByKey("internal_equipment");
+    if (contains("connect", "\u043A\u043E\u043D\u043D\u0435\u043A\u0442", "\u0442\u0435\u043B\u0435\u0442\u0430\u0439\u043F", "chatgpt", "gmail", "amo crm", "\u044E\u0434\u0436\u0430\u0439\u043B", "\u043F\u043E\u0447\u0442", "winscp") && !contains("\u0431\u0430\u0437\u0430", "\u0434\u0430\u043C\u043F")) {
+        return contains("\u0434\u043E\u0441\u0442\u0443\u043F", "\u0434\u043E\u0431\u0430\u0432", "\u0443\u0447\u0435\u0442\u043A", "\u043F\u0430\u0440\u043E\u043B", "\u0432\u043E\u0439\u0442\u0438", "\u0432\u0445\u043E\u0434") ? findByKey("internal_access") : findByKey("internal_external_service");
     }
-    if (contains("vpn") && !contains("клиент")) return findByKey("internal_external_service");
-    if (contains("доступ в бух", "доступ к учетной системе", "закрыть доступ", "доступы закрыты")) return findByKey("internal_access");
+    if (contains("vpn") && !contains("\u043A\u043B\u0438\u0435\u043D\u0442")) return findByKey("internal_external_service");
+    if (contains("\u0434\u043E\u0441\u0442\u0443\u043F \u0432 \u0431\u0443\u0445", "\u0434\u043E\u0441\u0442\u0443\u043F \u043A \u0443\u0447\u0435\u0442\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u0435", "\u0437\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F", "\u0434\u043E\u0441\u0442\u0443\u043F\u044B \u0437\u0430\u043A\u0440\u044B\u0442\u044B")) return findByKey("internal_access");
 
-    // Клиентские вопросы 1С.
-    if (contains("слк", "лиценз", "auto.lic", "ключ защиты", "уат")) return findByKey("client_industry_licenses");
-    if (contains("синхронизац", "транспорт обмен", "транспорт", "обмен между баз", "файл обмена")) return findByKey("client_exchange_transport");
-    if (contains("публикац", "опубликов", "odata", "веб-клиент", "веб клиент", "веб-сервис", "веб сервис")) return findByKey("client_publication");
-    if (contains("winrdp", "win rdp", "altrd", "альтрд", "rds", "рдп")) {
-        return contains("создать", "учетк", "доступ", "парол", "квот", "места") ? findByKey("client_access") : findByKey("client_remote_desktop");
+    // \u041A\u043B\u0438\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B 1\u0421.
+    if (contains("\u0441\u043B\u043A", "\u043B\u0438\u0446\u0435\u043D\u0437", "auto.lic", "\u043A\u043B\u044E\u0447 \u0437\u0430\u0449\u0438\u0442\u044B", "\u0443\u0430\u0442")) return findByKey("client_industry_licenses");
+    if (contains("\u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446", "\u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442 \u043E\u0431\u043C\u0435\u043D", "\u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442", "\u043E\u0431\u043C\u0435\u043D \u043C\u0435\u0436\u0434\u0443 \u0431\u0430\u0437", "\u0444\u0430\u0439\u043B \u043E\u0431\u043C\u0435\u043D\u0430")) return findByKey("client_exchange_transport");
+    if (contains("\u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446", "\u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432", "odata", "\u0432\u0435\u0431-\u043A\u043B\u0438\u0435\u043D\u0442", "\u0432\u0435\u0431 \u043A\u043B\u0438\u0435\u043D\u0442", "\u0432\u0435\u0431-\u0441\u0435\u0440\u0432\u0438\u0441", "\u0432\u0435\u0431 \u0441\u0435\u0440\u0432\u0438\u0441")) return findByKey("client_publication");
+    if (contains("winrdp", "win rdp", "altrd", "\u0430\u043B\u044C\u0442\u0440\u0434", "rds", "\u0440\u0434\u043F")) {
+        return contains("\u0441\u043E\u0437\u0434\u0430\u0442\u044C", "\u0443\u0447\u0435\u0442\u043A", "\u0434\u043E\u0441\u0442\u0443\u043F", "\u043F\u0430\u0440\u043E\u043B", "\u043A\u0432\u043E\u0442", "\u043C\u0435\u0441\u0442\u0430") ? findByKey("client_access") : findByKey("client_remote_desktop");
     }
     if (contains("ftp")) return findByKey("client_access");
-    if (contains("дата дамп", "дамп", "загрузить баз", "загрузка баз", "подгрузк", "выгрузк", "развернул", "развернуть", "восстановлен", "восстановить баз")) return findByKey("client_database_import_export");
-    if (contains("обновлен", "обновить", "обновление", "патч", "релиз", "файл перехода", "конфигураци")) {
-        return contains("нет релиза", "отсутств", "файл перехода", "подложил", "подгрузить релиз") ? findByKey("client_release") : findByKey("client_database_update");
+    if (contains("\u0434\u0430\u0442\u0430 \u0434\u0430\u043C\u043F", "\u0434\u0430\u043C\u043F", "\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0431\u0430\u0437", "\u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0431\u0430\u0437", "\u043F\u043E\u0434\u0433\u0440\u0443\u0437\u043A", "\u0432\u044B\u0433\u0440\u0443\u0437\u043A", "\u0440\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u043B", "\u0440\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u0442\u044C", "\u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D", "\u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0431\u0430\u0437")) return findByKey("client_database_import_export");
+    if (contains("\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D", "\u043E\u0431\u043D\u043E\u0432\u0438\u0442\u044C", "\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435", "\u043F\u0430\u0442\u0447", "\u0440\u0435\u043B\u0438\u0437", "\u0444\u0430\u0439\u043B \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0430", "\u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438")) {
+        return contains("\u043D\u0435\u0442 \u0440\u0435\u043B\u0438\u0437\u0430", "\u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432", "\u0444\u0430\u0439\u043B \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0430", "\u043F\u043E\u0434\u043B\u043E\u0436\u0438\u043B", "\u043F\u043E\u0434\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0440\u0435\u043B\u0438\u0437") ? findByKey("client_release") : findByKey("client_database_update");
     }
-    if (contains("задач модиф", "задачи модиф", "зм ", "зм по", " зо ", "конвертац", "перенос баз", "предоставлен")) return findByKey("client_background_tasks");
-    if (contains("не входит", "не войти", "при входе", "вход в баз", "подключиться к базе", "потеряно соединение")) return findByKey("client_database_login");
-    if (contains("ошибка в базе", "ошибка при", "тии", "тестирование и исправление", "фоновые задан", "ссылочной целост", "расширени", "ошибка релиза") || ticketType === "ошибка в базе") return findByKey("client_database_problem");
-    if (ticketType === "недоступность базы") return findByKey("client_database_login");
-    if (ticketType === "консультация" || contains("консультац", "возможност", "можно ли", "подскаж")) return findByKey("client_consultation");
-    if (ticketType === "оргтехника" || ticketType === "рабочее место сотрудника") return findByKey("internal_equipment");
-    if (ticketType === "сетевые и серверные вопросы") return findByKey("internal_network");
+    if (contains("\u0437\u0430\u0434\u0430\u0447 \u043C\u043E\u0434\u0438\u0444", "\u0437\u0430\u0434\u0430\u0447\u0438 \u043C\u043E\u0434\u0438\u0444", "\u0437\u043C ", "\u0437\u043C \u043F\u043E", " \u0437\u043E ", "\u043A\u043E\u043D\u0432\u0435\u0440\u0442\u0430\u0446", "\u043F\u0435\u0440\u0435\u043D\u043E\u0441 \u0431\u0430\u0437", "\u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D")) return findByKey("client_background_tasks");
+    if (contains("\u043D\u0435 \u0432\u0445\u043E\u0434\u0438\u0442", "\u043D\u0435 \u0432\u043E\u0439\u0442\u0438", "\u043F\u0440\u0438 \u0432\u0445\u043E\u0434\u0435", "\u0432\u0445\u043E\u0434 \u0432 \u0431\u0430\u0437", "\u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C\u0441\u044F \u043A \u0431\u0430\u0437\u0435", "\u043F\u043E\u0442\u0435\u0440\u044F\u043D\u043E \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435")) return findByKey("client_database_login");
+    if (contains("\u043E\u0448\u0438\u0431\u043A\u0430 \u0432 \u0431\u0430\u0437\u0435", "\u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438", "\u0442\u0438\u0438", "\u0442\u0435\u0441\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "\u0444\u043E\u043D\u043E\u0432\u044B\u0435 \u0437\u0430\u0434\u0430\u043D", "\u0441\u0441\u044B\u043B\u043E\u0447\u043D\u043E\u0439 \u0446\u0435\u043B\u043E\u0441\u0442", "\u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438", "\u043E\u0448\u0438\u0431\u043A\u0430 \u0440\u0435\u043B\u0438\u0437\u0430") || ticketType === "\u043E\u0448\u0438\u0431\u043A\u0430 \u0432 \u0431\u0430\u0437\u0435") return findByKey("client_database_problem");
+    if (ticketType === "\u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C \u0431\u0430\u0437\u044B") return findByKey("client_database_login");
+    if (ticketType === "\u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F" || contains("\u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446", "\u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442", "\u043C\u043E\u0436\u043D\u043E \u043B\u0438", "\u043F\u043E\u0434\u0441\u043A\u0430\u0436")) return findByKey("client_consultation");
+    if (ticketType === "\u043E\u0440\u0433\u0442\u0435\u0445\u043D\u0438\u043A\u0430" || ticketType === "\u0440\u0430\u0431\u043E\u0447\u0435\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430") return findByKey("internal_equipment");
+    if (ticketType === "\u0441\u0435\u0442\u0435\u0432\u044B\u0435 \u0438 \u0441\u0435\u0440\u0432\u0435\u0440\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B") return findByKey("internal_network");
 
     const exactMatches = categories.filter(category => category.aliases.includes(ticketType));
     if (exactMatches.length === 1) return exactMatches[0];
@@ -2232,7 +2236,7 @@ function classifyTicketCategory(ticket, categories) {
 }
 
 // ===============================
-// ЗАЯВКИ: ДЕТАЛИ И ЭКСПОРТ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0414\u0415\u0422\u0410\u041B\u0418 \u0418 \u042D\u041A\u0421\u041F\u041E\u0420\u0422
 // ===============================
 
 function getAnalyzedTicketsFlat() {
@@ -2305,8 +2309,8 @@ function drawTicketDonutChart(canvas, legend, data, definition) {
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.font = `600 ${Math.max(16, cssSize * 0.028)}px Arial, sans-serif`;
-        context.fillText("Нет заявок", center, center);
-        legend.innerHTML = '<div class="ticket-chart-empty">В этой группе нет завершённых заявок.</div>';
+        context.fillText("\u041D\u0435\u0442 \u0437\u0430\u044F\u0432\u043E\u043A", center, center);
+        legend.innerHTML = '<div class="ticket-chart-empty">\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u043D\u0435\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A.</div>';
         return;
     }
 
@@ -2337,8 +2341,8 @@ function drawTicketDonutChart(canvas, legend, data, definition) {
         row.className = "ticket-chart-legend-row";
         row.dataset.category = item.name;
         row.dataset.groupMatch = definition?.groupMatch || "";
-        row.title = `Открыть заявки категории «${item.name}»`;
-        row.setAttribute("aria-label", `Открыть заявки категории ${item.name}: ${item.count}, ${formatPercent(share)}`);
+        row.title = `\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0437\u0430\u044F\u0432\u043A\u0438 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u00AB${item.name}\u00BB`;
+        row.setAttribute("aria-label", `\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0437\u0430\u044F\u0432\u043A\u0438 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 ${item.name}: ${item.count}, ${formatPercent(share)}`);
         row.innerHTML = `
             <span class="ticket-chart-legend-color" style="background:${color}"></span>
             <span class="ticket-chart-legend-name">${escapeHtml(item.name)}</span>
@@ -2350,7 +2354,7 @@ function drawTicketDonutChart(canvas, legend, data, definition) {
 
     sectors.forEach(({ share, startAngle, endAngle, index }) => {
         const middleAngle = (startAngle + endAngle) / 2;
-        // Для узких секторов немного разводим подписи по радиусу, но оставляем их внутри сектора.
+        // \u0414\u043B\u044F \u0443\u0437\u043A\u0438\u0445 \u0441\u0435\u043A\u0442\u043E\u0440\u043E\u0432 \u043D\u0435\u043C\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0432\u043E\u0434\u0438\u043C \u043F\u043E\u0434\u043F\u0438\u0441\u0438 \u043F\u043E \u0440\u0430\u0434\u0438\u0443\u0441\u0443, \u043D\u043E \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u0438\u0445 \u0432\u043D\u0443\u0442\u0440\u0438 \u0441\u0435\u043A\u0442\u043E\u0440\u0430.
         const labelRadiusFactor = share < 0.045 ? (index % 2 === 0 ? 0.76 : 0.63) : 0.62;
         const labelRadius = radius * labelRadiusFactor;
         const x = center + Math.cos(middleAngle) * labelRadius;
@@ -2381,20 +2385,20 @@ function openTicketsByCategory(groupMatch, categoryName) {
     const tickets = getAnalyzedTicketsFlat()
         .filter(ticket => {
             const group = normalizeText(ticket.classifiedGroup);
-            const category = normalizeText(ticket.classifiedCategory || "Не определена");
+            const category = normalizeText(ticket.classifiedCategory || "\u041D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430");
             return group.includes(normalizedGroup) && category === normalizedCategory;
         })
         .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
 
     if (tickets.length === 0) return;
-    const groupLabel = cleanText(tickets[0]?.classifiedGroup) || "Группа не определена";
+    const groupLabel = cleanText(tickets[0]?.classifiedGroup) || "\u0413\u0440\u0443\u043F\u043F\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430";
     const standardMs = tickets.reduce((sum, ticket) => sum + (ticket.standardMs || 0), 0);
     const actualMs = tickets.reduce((sum, ticket) => sum + (ticket.actualMs || 0), 0);
 
     openTicketsCollectionModal({
-        title: `Заявки категории: ${categoryName}`,
-        subtitle: `${groupLabel} · ${tickets.length} завершённых заявок · нормативное время ${formatDuration(standardMs)} · указанная длительность ${formatDuration(actualMs)}`,
-        filenameLabel: `категория_${categoryName}`,
+        title: `\u0417\u0430\u044F\u0432\u043A\u0438 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438: ${categoryName}`,
+        subtitle: `${groupLabel} \u00B7 ${tickets.length} \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A \u00B7 \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F ${formatDuration(standardMs)} \u00B7 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u0430\u044F \u0434\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C ${formatDuration(actualMs)}`,
+        filenameLabel: `\u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F_${categoryName}`,
         tickets
     });
 }
@@ -2476,44 +2480,44 @@ function buildTicketReportPdfElement() {
     const header = document.createElement("div");
     header.className = "pdf-report-header";
     header.innerHTML = `
-        <h1>Отчёт по заявкам</h1>
-        <p><b>Период:</b> ${escapeHtml(getReportPeriodLabel())}</p>
-        <p><b>Источник:</b> ${escapeHtml(getReportSourceLabel())}</p>
+        <h1>\u041E\u0442\u0447\u0451\u0442 \u043F\u043E \u0437\u0430\u044F\u0432\u043A\u0430\u043C</h1>
+        <p><b>\u041F\u0435\u0440\u0438\u043E\u0434:</b> ${escapeHtml(getReportPeriodLabel())}</p>
+        <p><b>\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A:</b> ${escapeHtml(getReportSourceLabel())}</p>
     `;
     exportRoot.appendChild(header);
 
     const summary = document.createElement("div");
     summary.className = "pdf-summary-grid";
     summary.innerHTML = `
-        <div><span>Обработано тикетов</span><b>${totals.completed}</b></div>
-        <div><span>Исполнителей</span><b>${ticketAnalysisResult.length}</b></div>
-        <div><span>Общее время тикетов</span><b>${escapeHtml(formatDuration(totals.lifecycleMs))}</b></div>
-        <div><span>Время по нормативу</span><b>${escapeHtml(formatDuration(totals.standardMs))}</b></div>
-        <div><span>Просрочено</span><b>${escapeHtml(formatPercent(evaluatedOverduePercent))}</b></div>
+        <div><span>\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0442\u0438\u043A\u0435\u0442\u043E\u0432</span><b>${totals.completed}</b></div>
+        <div><span>\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439</span><b>${ticketAnalysisResult.length}</b></div>
+        <div><span>\u041E\u0431\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F \u0442\u0438\u043A\u0435\u0442\u043E\u0432</span><b>${escapeHtml(formatDuration(totals.lifecycleMs))}</b></div>
+        <div><span>\u0412\u0440\u0435\u043C\u044F \u043F\u043E \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u0443</span><b>${escapeHtml(formatDuration(totals.standardMs))}</b></div>
+        <div><span>\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E</span><b>${escapeHtml(formatPercent(evaluatedOverduePercent))}</b></div>
     `;
     exportRoot.appendChild(summary);
 
     const sectionTitle = document.createElement("h2");
-    sectionTitle.textContent = "Сводка по исполнителям";
+    sectionTitle.textContent = "\u0421\u0432\u043E\u0434\u043A\u0430 \u043F\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F\u043C";
     exportRoot.appendChild(sectionTitle);
 
     const table = document.createElement("table");
     table.className = "pdf-report-table";
     table.innerHTML = `
         <thead><tr>
-            <th>Исполнитель</th>
-            <th>Тикетов</th>
-            <th>Новая - Завершена</th>
-            <th>Длительность</th>
-            <th>Норматив</th>
-            <th>Раб. дней</th>
-            <th>Норма часов</th>
-            <th>Факт. часов</th>
-            <th>% на тикеты</th>
-            <th>С дедлайном</th>
-            <th>В срок</th>
-            <th>Просрочено</th>
-            <th>% просроч.</th>
+            <th>\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C</th>
+            <th>\u0422\u0438\u043A\u0435\u0442\u043E\u0432</th>
+            <th>\u041D\u043E\u0432\u0430\u044F - \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430</th>
+            <th>\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C</th>
+            <th>\u041D\u043E\u0440\u043C\u0430\u0442\u0438\u0432</th>
+            <th>\u0420\u0430\u0431. \u0434\u043D\u0435\u0439</th>
+            <th>\u041D\u043E\u0440\u043C\u0430 \u0447\u0430\u0441\u043E\u0432</th>
+            <th>\u0424\u0430\u043A\u0442. \u0447\u0430\u0441\u043E\u0432</th>
+            <th>% \u043D\u0430 \u0442\u0438\u043A\u0435\u0442\u044B</th>
+            <th>\u0421 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u043E\u043C</th>
+            <th>\u0412 \u0441\u0440\u043E\u043A</th>
+            <th>\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E</th>
+            <th>% \u043F\u0440\u043E\u0441\u0440\u043E\u0447.</th>
         </tr></thead>
         <tbody></tbody>
     `;
@@ -2541,7 +2545,7 @@ function buildTicketReportPdfElement() {
 
     const calculationNote = document.createElement("p");
     calculationNote.className = "pdf-calculation-note";
-    calculationNote.textContent = "Процент времени на тикеты = сумма нормативов по тематикам / фактически отработанные часы. Процент просроченных = просроченные / заявки с оценённым дедлайном.";
+    calculationNote.textContent = "\u041F\u0440\u043E\u0446\u0435\u043D\u0442 \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043D\u0430 \u0442\u0438\u043A\u0435\u0442\u044B = \u0441\u0443\u043C\u043C\u0430 \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u043E\u0432 \u043F\u043E \u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0430\u043C / \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\u0435 \u0447\u0430\u0441\u044B. \u041F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u044B\u0445 = \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u044B\u0435 / \u0437\u0430\u044F\u0432\u043A\u0438 \u0441 \u043E\u0446\u0435\u043D\u0451\u043D\u043D\u044B\u043C \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u043E\u043C.";
     exportRoot.appendChild(calculationNote);
 
     return exportRoot;
@@ -2554,9 +2558,9 @@ function buildTicketsPdfHeaderElement(context) {
     const header = document.createElement("div");
     header.className = "pdf-report-header";
     header.innerHTML = `
-        <h1>${escapeHtml(context.title || "Заявки")}</h1>
-        <p><b>Период:</b> ${escapeHtml(getReportPeriodLabel())}</p>
-        <p>${escapeHtml(context.subtitle || `${context.tickets?.length || 0} завершённых заявок`)}</p>
+        <h1>${escapeHtml(context.title || "\u0417\u0430\u044F\u0432\u043A\u0438")}</h1>
+        <p><b>\u041F\u0435\u0440\u0438\u043E\u0434:</b> ${escapeHtml(getReportPeriodLabel())}</p>
+        <p>${escapeHtml(context.subtitle || `${context.tickets?.length || 0} \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A`)}</p>
     `;
     exportRoot.appendChild(header);
     return exportRoot;
@@ -2600,7 +2604,7 @@ async function loadLibraryFromUrls(urls, readyCheck) {
             lastError = error;
         }
     }
-    throw lastError || new Error("Не удалось загрузить библиотеку PDF.");
+    throw lastError || new Error("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 PDF.");
 }
 
 async function ensurePdfExportLibrary() {
@@ -2651,7 +2655,7 @@ async function renderPdfElementToCanvas(element, host) {
 
     const rect = element.getBoundingClientRect();
     if (rect.width < 10 || rect.height < 10) {
-        throw new Error("Печатная область имеет нулевой размер.");
+        throw new Error("\u041F\u0435\u0447\u0430\u0442\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0438\u043C\u0435\u0435\u0442 \u043D\u0443\u043B\u0435\u0432\u043E\u0439 \u0440\u0430\u0437\u043C\u0435\u0440.");
     }
 
     const canvas = await window.html2canvas(element, {
@@ -2667,7 +2671,7 @@ async function renderPdfElementToCanvas(element, host) {
     });
 
     if (!canvas || canvas.width < 10 || canvas.height < 10) {
-        throw new Error("Не удалось отрисовать содержимое для PDF.");
+        throw new Error("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u0440\u0438\u0441\u043E\u0432\u0430\u0442\u044C \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435 \u0434\u043B\u044F PDF.");
     }
     return canvas;
 }
@@ -2712,7 +2716,7 @@ function addCanvasToPdf(pdf, canvas, state, options = {}) {
         return;
     }
 
-    // Очень длинный блок режем на полосы по высоте страницы, поэтому даже большой список не создаёт гигантский canvas PDF.
+    // \u041E\u0447\u0435\u043D\u044C \u0434\u043B\u0438\u043D\u043D\u044B\u0439 \u0431\u043B\u043E\u043A \u0440\u0435\u0436\u0435\u043C \u043D\u0430 \u043F\u043E\u043B\u043E\u0441\u044B \u043F\u043E \u0432\u044B\u0441\u043E\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0434\u0430\u0436\u0435 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u043D\u0435 \u0441\u043E\u0437\u0434\u0430\u0451\u0442 \u0433\u0438\u0433\u0430\u043D\u0442\u0441\u043A\u0438\u0439 canvas PDF.
     const sourcePixelsPerMm = canvas.width / targetWidth;
     const maxSliceHeightPx = Math.max(1, Math.floor(usableHeight * sourcePixelsPerMm));
     let sourceY = 0;
@@ -2739,13 +2743,13 @@ function addCanvasToPdf(pdf, canvas, state, options = {}) {
 
 async function exportTicketReportPdf() {
     if (ticketAnalysisResult.length === 0) {
-        showTicketStatus("Сначала выполните расчёт заявок.", true);
+        showTicketStatus("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0440\u0430\u0441\u0447\u0451\u0442 \u0437\u0430\u044F\u0432\u043E\u043A.", true);
         return;
     }
 
     const originalText = exportTicketsPdfBtn.textContent;
     exportTicketsPdfBtn.disabled = true;
-    exportTicketsPdfBtn.textContent = "Формирую PDF...";
+    exportTicketsPdfBtn.textContent = "\u0424\u043E\u0440\u043C\u0438\u0440\u0443\u044E PDF...";
     let host = null;
 
     try {
@@ -2772,12 +2776,12 @@ async function exportTicketReportPdf() {
         }
 
         const period = getReportPeriodLabel().replace(/\s+/g, "_");
-        const filename = sanitizePdfFilename(`отчёт_по_заявкам_${period}`) + ".pdf";
+        const filename = sanitizePdfFilename(`\u043E\u0442\u0447\u0451\u0442_\u043F\u043E_\u0437\u0430\u044F\u0432\u043A\u0430\u043C_${period}`) + ".pdf";
         pdf.save(filename);
-        showTicketStatus("PDF-отчёт сформирован.", false);
+        showTicketStatus("PDF-\u043E\u0442\u0447\u0451\u0442 \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D.", false);
     } catch (error) {
         console.error(error);
-        showTicketStatus("Не удалось сформировать PDF: " + error.message, true);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C PDF: " + error.message, true);
     } finally {
         host?.remove();
         exportTicketsPdfBtn.textContent = originalText;
@@ -2791,7 +2795,7 @@ async function exportActiveEmployeeTicketsPdf() {
 
     const originalText = ticketsModalPdfBtn.textContent;
     ticketsModalPdfBtn.disabled = true;
-    ticketsModalPdfBtn.textContent = "Формирую PDF...";
+    ticketsModalPdfBtn.textContent = "\u0424\u043E\u0440\u043C\u0438\u0440\u0443\u044E PDF...";
     let host = null;
 
     try {
@@ -2816,12 +2820,12 @@ async function exportActiveEmployeeTicketsPdf() {
         }
 
         const period = getReportPeriodLabel().replace(/\s+/g, "_");
-        const filename = sanitizePdfFilename(`заявки_${context.filenameLabel || "выборка"}_${period}`) + ".pdf";
+        const filename = sanitizePdfFilename(`\u0437\u0430\u044F\u0432\u043A\u0438_${context.filenameLabel || "\u0432\u044B\u0431\u043E\u0440\u043A\u0430"}_${period}`) + ".pdf";
         pdf.save(filename);
-        showTicketStatus(`PDF со списком заявок сформирован: ${context.tickets.length}.`, false);
+        showTicketStatus(`PDF \u0441\u043E \u0441\u043F\u0438\u0441\u043A\u043E\u043C \u0437\u0430\u044F\u0432\u043E\u043A \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D: ${context.tickets.length}.`, false);
     } catch (error) {
         console.error(error);
-        showTicketStatus("Не удалось сформировать PDF списка заявок: " + error.message, true);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C PDF \u0441\u043F\u0438\u0441\u043A\u0430 \u0437\u0430\u044F\u0432\u043E\u043A: " + error.message, true);
     } finally {
         host?.remove();
         ticketsModalPdfBtn.textContent = originalText;
@@ -2840,8 +2844,8 @@ function openTicketsDetailsModal(employeeName) {
     if (!result) return;
 
     openTicketsCollectionModal({
-        title: `Заявки: ${employeeName}`,
-        subtitle: `${result.completedCount} завершённых заявок, нормативное время работ ${formatDuration(result.standardMs)}, указанная длительность ${formatDuration(result.actualMs)}`,
+        title: `\u0417\u0430\u044F\u0432\u043A\u0438: ${employeeName}`,
+        subtitle: `${result.completedCount} \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A, \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u0440\u0430\u0431\u043E\u0442 ${formatDuration(result.standardMs)}, \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u0430\u044F \u0434\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C ${formatDuration(result.actualMs)}`,
         filenameLabel: employeeName,
         tickets: result.tickets
     });
@@ -2854,9 +2858,9 @@ function openTicketsCollectionModal({ title, subtitle, filenameLabel, tickets })
     if (sortedTickets.length === 0) return;
 
     activeTicketsModalContext = {
-        title: title || "Заявки",
-        subtitle: subtitle || `${sortedTickets.length} завершённых заявок`,
-        filenameLabel: filenameLabel || "выборка",
+        title: title || "\u0417\u0430\u044F\u0432\u043A\u0438",
+        subtitle: subtitle || `${sortedTickets.length} \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A`,
+        filenameLabel: filenameLabel || "\u0432\u044B\u0431\u043E\u0440\u043A\u0430",
         tickets: sortedTickets
     };
 
@@ -2870,25 +2874,25 @@ function openTicketsCollectionModal({ title, subtitle, filenameLabel, tickets })
         card.className = "ticket-card";
         card.innerHTML = `
             <div class="ticket-card-header">
-                <div><h3>${escapeHtml(ticket.number || ticket.id || "Заявка")}</h3><span class="ticket-status">${escapeHtml(ticket.status || "Статус не указан")}</span></div>
-                <div><b>${escapeHtml(ticket.classifiedCategory)}</b><br><span class="hint">${escapeHtml(ticket.classifiedGroup || ticket.line || "Группа не определена")}</span></div>
+                <div><h3>${escapeHtml(ticket.number || ticket.id || "\u0417\u0430\u044F\u0432\u043A\u0430")}</h3><span class="ticket-status">${escapeHtml(ticket.status || "\u0421\u0442\u0430\u0442\u0443\u0441 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D")}</span></div>
+                <div><b>${escapeHtml(ticket.classifiedCategory)}</b><br><span class="hint">${escapeHtml(ticket.classifiedGroup || ticket.line || "\u0413\u0440\u0443\u043F\u043F\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430")}</span></div>
             </div>
             <div class="ticket-metrics">
-                <div class="ticket-metric"><span>Новая → Завершена</span><b>${ticket.lifecycleMs > 0 ? formatDuration(ticket.lifecycleMs) : "Нет истории"}</b></div>
-                <div class="ticket-metric"><span>Длительность</span><b>${ticket.actualMs > 0 ? formatDuration(ticket.actualMs) : "Не заполнена"}</b></div>
-                <div class="ticket-metric"><span>Норматив тематики</span><b>${ticket.standardMs > 0 ? formatDuration(ticket.standardMs) : "Не найден"}</b></div>
-                <div class="ticket-metric"><span>Дедлайн</span><b>${formatTicketDeadlineResult(ticket)}</b></div>
+                <div class="ticket-metric"><span>\u041D\u043E\u0432\u0430\u044F \u2192 \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430</span><b>${ticket.lifecycleMs > 0 ? formatDuration(ticket.lifecycleMs) : "\u041D\u0435\u0442 \u0438\u0441\u0442\u043E\u0440\u0438\u0438"}</b></div>
+                <div class="ticket-metric"><span>\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C</span><b>${ticket.actualMs > 0 ? formatDuration(ticket.actualMs) : "\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u0430"}</b></div>
+                <div class="ticket-metric"><span>\u041D\u043E\u0440\u043C\u0430\u0442\u0438\u0432 \u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0438</span><b>${ticket.standardMs > 0 ? formatDuration(ticket.standardMs) : "\u041D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D"}</b></div>
+                <div class="ticket-metric"><span>\u0414\u0435\u0434\u043B\u0430\u0439\u043D</span><b>${formatTicketDeadlineResult(ticket)}</b></div>
             </div>
             <div class="dialog-meta">
-                <div><b>Новая:</b> ${escapeHtml(formatTicketDateTime(ticket.newAt) || "Нет данных")}</div>
-                <div><b>Завершена:</b> ${escapeHtml(formatTicketDateTime(ticket.completedAt) || "Нет данных")}</div>
-                <div><b>Срок:</b> ${escapeHtml(formatTicketDateTime(ticket.deadlineAt) || "Не указан")}</div>
-                <div><b>Клиент:</b> ${escapeHtml(ticket.client || "Не указан")}</div>
-                <div><b>Инициатор:</b> ${escapeHtml(ticket.initiator || "Не указан")}</div>
+                <div><b>\u041D\u043E\u0432\u0430\u044F:</b> ${escapeHtml(formatTicketDateTime(ticket.newAt) || "\u041D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445")}</div>
+                <div><b>\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430:</b> ${escapeHtml(formatTicketDateTime(ticket.completedAt) || "\u041D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445")}</div>
+                <div><b>\u0421\u0440\u043E\u043A:</b> ${escapeHtml(formatTicketDateTime(ticket.deadlineAt) || "\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D")}</div>
+                <div><b>\u041A\u043B\u0438\u0435\u043D\u0442:</b> ${escapeHtml(ticket.client || "\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D")}</div>
+                <div><b>\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u043E\u0440:</b> ${escapeHtml(ticket.initiator || "\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D")}</div>
             </div>
-            ${ticket.topic ? `<div class="ticket-description"><b>Тема:</b> ${escapeHtml(ticket.topic)}</div>` : ""}
-            ${ticket.problem ? `<div class="ticket-description"><b>Проблема:</b> ${escapeHtml(ticket.problem)}</div>` : ""}
-            ${ticket.solution ? `<div class="ticket-description"><b>Решение:</b> ${escapeHtml(ticket.solution)}</div>` : ""}
+            ${ticket.topic ? `<div class="ticket-description"><b>\u0422\u0435\u043C\u0430:</b> ${escapeHtml(ticket.topic)}</div>` : ""}
+            ${ticket.problem ? `<div class="ticket-description"><b>\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430:</b> ${escapeHtml(ticket.problem)}</div>` : ""}
+            ${ticket.solution ? `<div class="ticket-description"><b>\u0420\u0435\u0448\u0435\u043D\u0438\u0435:</b> ${escapeHtml(ticket.solution)}</div>` : ""}
         `;
         ticketsModalBody.appendChild(card);
     });
@@ -2897,10 +2901,10 @@ function openTicketsCollectionModal({ title, subtitle, filenameLabel, tickets })
 }
 
 function formatTicketDeadlineResult(ticket) {
-    if (!ticket.deadlineAt) return "Не указан";
-    if (ticket.deadlineResult === "on-time") return "В срок";
-    if (ticket.deadlineResult === "overdue") return "Просрочено";
-    return "Не оценён";
+    if (!ticket.deadlineAt) return "\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D";
+    if (ticket.deadlineResult === "on-time") return "\u0412 \u0441\u0440\u043E\u043A";
+    if (ticket.deadlineResult === "overdue") return "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E";
+    return "\u041D\u0435 \u043E\u0446\u0435\u043D\u0451\u043D";
 }
 
 function closeTicketsDetailsModal() {
@@ -2912,14 +2916,14 @@ function closeTicketsDetailsModal() {
 
 function exportTicketsCsv() {
     if (ticketAnalysisResult.length === 0) {
-        showTicketStatus("Нет результатов для экспорта.", true);
+        showTicketStatus("\u041D\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432 \u0434\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430.", true);
         return;
     }
     const rows = [[
-        "Исполнитель", "Обработано тикетов", "Общее время тикетов, минут", "Общее время тикетов",
-        "Длительность, минут", "Длительность", "Фактическое время работ по нормативу, минут",
-        "Фактическое время работ по нормативу", "Рабочих дней", "Норма часов по производственному календарю", "Фактически отработано часов",
-        "% времени на тикеты", "Заявок с дедлайном", "В срок", "Просрочено", "% просроченных"
+        "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", "\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0442\u0438\u043A\u0435\u0442\u043E\u0432", "\u041E\u0431\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F \u0442\u0438\u043A\u0435\u0442\u043E\u0432, \u043C\u0438\u043D\u0443\u0442", "\u041E\u0431\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F \u0442\u0438\u043A\u0435\u0442\u043E\u0432",
+        "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C, \u043C\u0438\u043D\u0443\u0442", "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "\u0424\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u0440\u0430\u0431\u043E\u0442 \u043F\u043E \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u0443, \u043C\u0438\u043D\u0443\u0442",
+        "\u0424\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u0440\u0430\u0431\u043E\u0442 \u043F\u043E \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u0443", "\u0420\u0430\u0431\u043E\u0447\u0438\u0445 \u0434\u043D\u0435\u0439", "\u041D\u043E\u0440\u043C\u0430 \u0447\u0430\u0441\u043E\u0432 \u043F\u043E \u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u043C\u0443 \u043A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044E", "\u0424\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0447\u0430\u0441\u043E\u0432",
+        "% \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043D\u0430 \u0442\u0438\u043A\u0435\u0442\u044B", "\u0417\u0430\u044F\u0432\u043E\u043A \u0441 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u043E\u043C", "\u0412 \u0441\u0440\u043E\u043A", "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E", "% \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u044B\u0445"
     ]];
     ticketAnalysisResult.forEach(item => rows.push([
         item.employee,
@@ -2942,6 +2946,107 @@ function exportTicketsCsv() {
     downloadCsv(rows, "ticket_time_result.csv");
 }
 
+async function exportTicketsExcelWithCategories() {
+    const tickets = getAnalyzedTicketsFlat();
+    if (tickets.length === 0) {
+        showTicketStatus("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0440\u0430\u0441\u0447\u0451\u0442 \u0437\u0430\u044F\u0432\u043E\u043A.", true);
+        return;
+    }
+
+    const originalText = exportTicketsCategoriesBtn.textContent;
+    exportTicketsCategoriesBtn.disabled = true;
+    exportTicketsCategoriesBtn.textContent = "\u0424\u043E\u0440\u043C\u0438\u0440\u0443\u044E Excel...";
+
+    try {
+        await ensureXlsxLibrary();
+
+        const rows = [[
+            "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C",
+            "\u0412\u0440\u0435\u043C\u044F \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u044F",
+            "\u041B\u0438\u043D\u0438\u044F",
+            "\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0442\u0438\u043F \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430",
+            "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F",
+            "\u041D\u043E\u0440\u043C\u0430\u0442\u0438\u0432 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438, \u043C\u0438\u043D\u0443\u0442",
+            "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u044B, \u043C\u0438\u043D\u0443\u0442",
+            "\u0422\u0435\u043C\u0430 \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B",
+            "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F",
+            "\u0421\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u0421\u0442\u0430\u0442\u0443\u0441 \u041D\u043E\u0432\u0430\u044F",
+            "\u0421\u0442\u0430\u0442\u0443\u0441 \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430",
+            "\u041D\u043E\u0432\u0430\u044F \u2192 \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430, \u043C\u0438\u043D\u0443\u0442",
+            "\u0421\u0440\u043E\u043A \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u043E \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u0443",
+            "\u041A\u043B\u0438\u0435\u043D\u0442",
+            "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u043E\u0440 \u0437\u0430\u044F\u0432\u043A\u0438",
+            "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"
+        ]];
+
+        tickets
+            .slice()
+            .sort((a, b) => {
+                const employeeCompare = (a.employee || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D").localeCompare(b.employee || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D", "ru");
+                return employeeCompare || (a.createdAt || 0) - (b.createdAt || 0);
+            })
+            .forEach(ticket => rows.push([
+                ticket.number || "",
+                ticket.id || "",
+                ticket.employee || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D",
+                formatTicketDateTime(ticket.createdAt),
+                ticket.line || "",
+                ticket.category || "",
+                ticket.classifiedGroup || "\u041D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430",
+                ticket.classifiedCategory || "\u041D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0430",
+                ticket.standardMs > 0 ? roundNumber(ticket.standardMs / 60000) : "",
+                ticket.actualMs > 0 ? roundNumber(ticket.actualMs / 60000) : "",
+                ticket.topic || "",
+                ticket.problem || "",
+                ticket.solution || "",
+                ticket.status || "",
+                formatTicketDateTime(ticket.newAt),
+                formatTicketDateTime(ticket.completedAt),
+                ticket.lifecycleMs > 0 ? roundNumber(ticket.lifecycleMs / 60000) : "",
+                formatTicketDateTime(ticket.deadlineAt),
+                formatTicketDeadlineResult(ticket),
+                ticket.client || "",
+                ticket.initiator || "",
+                ticket.priority || ""
+            ]));
+
+        const worksheet = XLSX.utils.aoa_to_sheet(rows);
+        worksheet["!autofilter"] = { ref: worksheet["!ref"] };
+        worksheet["!cols"] = [
+            { wch: 16 }, { wch: 38 }, { wch: 24 }, { wch: 19 }, { wch: 24 },
+            { wch: 24 }, { wch: 34 }, { wch: 48 }, { wch: 20 }, { wch: 23 },
+            { wch: 36 }, { wch: 52 }, { wch: 52 }, { wch: 18 }, { wch: 19 },
+            { wch: 19 }, { wch: 27 }, { wch: 19 }, { wch: 23 }, { wch: 28 },
+            { wch: 28 }, { wch: 16 }
+        ];
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "\u0417\u0430\u044F\u0432\u043A\u0438 \u0441 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C\u0438");
+
+        const filters = getTicketFilters();
+        const dateFrom = filters.dateFrom ? formatDateInputValue(filters.dateFrom) : "\u043F\u0435\u0440\u0438\u043E\u0434";
+        const dateTo = filters.dateTo ? formatDateInputValue(filters.dateTo) : "\u043F\u0435\u0440\u0438\u043E\u0434";
+        XLSX.writeFile(workbook, `\u0437\u0430\u044F\u0432\u043A\u0438_\u0441_\u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C\u0438_${dateFrom}_${dateTo}.xlsx`, {
+            bookType: "xlsx",
+            compression: true
+        });
+
+        showTicketStatus(`Excel \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D. \u0412\u044B\u0433\u0440\u0443\u0436\u0435\u043D\u043E \u0437\u0430\u044F\u0432\u043E\u043A \u0441 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F\u043C\u0438: ${tickets.length}.`, false);
+    } catch (error) {
+        console.error(error);
+        showTicketStatus("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C Excel: " + error.message, true);
+    } finally {
+        exportTicketsCategoriesBtn.textContent = originalText;
+        exportTicketsCategoriesBtn.disabled = ticketAnalysisResult.length === 0;
+    }
+}
+
 function downloadCsv(rows, filename) {
     const csv = rows.map(row => row.map(escapeCsvValue).join(";")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
@@ -2954,7 +3059,7 @@ function downloadCsv(rows, filename) {
 }
 
 // ===============================
-// ЗАЯВКИ: ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// \u0417\u0410\u042F\u0412\u041A\u0418: \u0412\u0421\u041F\u041E\u041C\u041E\u0413\u0410\u0422\u0415\u041B\u042C\u041D\u042B\u0415 \u0424\u0423\u041D\u041A\u0426\u0418\u0418
 // ===============================
 
 function parseTicketDate(value) {
@@ -2972,8 +3077,8 @@ function parseTicketDate(value) {
     const ruMatch = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?(?:([+-]\d{2}:?\d{2}))?$/);
     if (ruMatch) {
         const [, day, month, year, hour, minute, second = "00"] = ruMatch;
-        // Выгрузки 1С могут добавлять часовой пояс только к дедлайну, но не к истории.
-        // Сравниваем все поля как локальное бизнес-время и не допускаем сдвиг на несколько часов.
+        // \u0412\u044B\u0433\u0440\u0443\u0437\u043A\u0438 1\u0421 \u043C\u043E\u0433\u0443\u0442 \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0442\u044C \u0447\u0430\u0441\u043E\u0432\u043E\u0439 \u043F\u043E\u044F\u0441 \u0442\u043E\u043B\u044C\u043A\u043E \u043A \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u0443, \u043D\u043E \u043D\u0435 \u043A \u0438\u0441\u0442\u043E\u0440\u0438\u0438.
+        // \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u043C \u0432\u0441\u0435 \u043F\u043E\u043B\u044F \u043A\u0430\u043A \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0438\u0437\u043D\u0435\u0441-\u0432\u0440\u0435\u043C\u044F \u0438 \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u0435\u043C \u0441\u0434\u0432\u0438\u0433 \u043D\u0430 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u043E\u0432.
         const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second));
         return isNaN(date.getTime()) ? null : date;
     }
