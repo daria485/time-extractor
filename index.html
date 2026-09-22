@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Time extractor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css?v=20260813-1947">
+    <link rel="stylesheet" href="style.css?v=20260922-vertical">
 </head>
 <body>
 <div class="app">
@@ -206,22 +206,7 @@
             <h2>4. Сводка</h2>
             <div class="table-wrapper">
                 <table class="ticket-result-table">
-                    <thead><tr>
-                        <th>Исполнитель</th>
-                        <th>Обработано тикетов</th>
-                        <th>Общее время тикетов<br><span>Новая → Завершена</span></th>
-                        <th>Длительность</th>
-                        <th>Фактическое время работ<br><span>по нормативу тематики</span></th>
-                        <th>Рабочих дней<br><span>по производственному календарю</span></th>
-                        <th>Норма часов<br><span>по производственному календарю</span></th>
-                        <th>Фактически отработано часов</th>
-                        <th>% времени на тикеты</th>
-                        <th>С дедлайном</th>
-                        <th>В срок</th>
-                        <th>Просрочено</th>
-                        <th>% просроченных</th>
-                        <th>Заявки</th>
-                    </tr></thead>
+                    <thead><tr><th scope="col">Показатель</th></tr></thead>
                     <tbody id="ticketResultBody"></tbody>
                 </table>
             </div>
@@ -275,7 +260,7 @@
     </div>
 </div>
 
-<script src="/vendor/xlsx.full.min.js"></script>
-<script src="app.js?v=20260817-1"></script>
+<script src="xlsx.full.min.js"></script>
+<script src="app.js?v=20260922-vertical"></script>
 </body>
 </html>

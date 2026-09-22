@@ -2040,33 +2040,8 @@ function renderTicketAnalysis() {
         total.deadlineEvaluated > 0 ? total.overdue / total.deadlineEvaluated : null
     );
 
-    ticketResultBody.innerHTML = "";
-    if (ticketAnalysisResult.length === 0) {
-        const row = document.createElement("tr");
-        row.innerHTML = '<td colspan="14">\u041D\u0435\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0445 \u0437\u0430\u044F\u0432\u043E\u043A \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0444\u0438\u043B\u044C\u0442\u0440\u043E\u0432.</td>';
-        ticketResultBody.appendChild(row);
-    } else {
-        ticketAnalysisResult.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${escapeHtml(item.employee)}</td>
-                <td>${item.completedCount}</td>
-                <td>${formatDuration(item.lifecycleMs)}</td>
-                <td>${formatDuration(item.actualMs)}</td>
-                <td>${formatDuration(item.standardMs)}</td>
-                <td>${item.workDays}</td>
-                <td>${formatHoursNumber(item.productionNormHours)}</td>
-                <td>${formatHoursNumber(item.workedHours)}</td>
-                <td>${formatPercent(item.utilizationPercent)}</td>
-                <td>${item.deadlineCount}</td>
-                <td>${item.onTimeCount}</td>
-                <td>${item.overdueCount}</td>
-                <td>${formatPercent(item.overduePercent)}</td>
-                <td><button type="button" class="small-button view-tickets-btn" data-employee="${escapeHtml(item.employee)}">\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C</button></td>
-            `;
-            ticketResultBody.appendChild(row);
-        });
-    }
+    const table = ticketResultBody.closest("table");
+    fillTicketMetricTable(table, ticketAnalysisResult, true);
 
     ticketSummary.hidden = false;
     ticketResultsPanel.hidden = false;
@@ -2471,84 +2446,84 @@ function cloneTicketChartCardForPdf(definition) {
     return clone;
 }
 
-function buildTicketReportPdfElement() {
+// A shared matrix keeps screen and PDF values and labels consistent.
+function fillTicketMetricTable(table, employees, interactive = false) {
+    const groups = [
+        ["Объём работы", [
+            ["Завершено заявок", item => item.completedCount]
+        ]],
+        ["Время и загрузка", [
+            ["Общее время заявок", item => formatDuration(item.lifecycleMs), "От создания до завершения, без пауз"],
+            ["Длительность работ", item => formatDuration(item.actualMs), "Из поля «Длительность»"],
+            ["Время по нормативу", item => formatDuration(item.standardMs), "Сумма нормативов тематик"],
+            ["Рабочие дни", item => item.workDays, "По производственному календарю"],
+            ["Норма рабочего времени, ч", item => formatHoursNumber(item.productionNormHours)],
+            ["Фактически отработано, ч", item => formatHoursNumber(item.workedHours)],
+            ["Доля времени на заявки", item => formatPercent(item.utilizationPercent), "Нормативное время / отработанное время", "accent"]
+        ]],
+        ["Соблюдение сроков", [
+            ["Заявки с дедлайном", item => item.deadlineCount],
+            ["Завершено в срок", item => item.onTimeCount],
+            ["Просрочено заявок", item => item.overdueCount],
+            ["Доля просроченных", item => formatPercent(item.overduePercent), "Среди заявок с оценённым дедлайном", "accent"]
+        ]]
+    ];
+    table.classList.add("metric-table");
+    table.style.minWidth = interactive ? `${280 + employees.length * 180}px` : "0";
+    const head = table.tHead || table.createTHead();
+    const body = table.tBodies[0] || table.createTBody();
+    head.innerHTML = `<tr><th scope="col">Показатель</th>${employees.map(item => `<th scope="col">${escapeHtml(item.employee)}</th>`).join("")}</tr>`;
+    body.innerHTML = "";
+    if (!employees.length) {
+        body.innerHTML = '<tr><td>Нет завершённых заявок для выбранных фильтров.</td></tr>';
+        return;
+    }
+    groups.forEach(([title, metrics]) => {
+        const section = body.insertRow();
+        section.className = "metric-section";
+        section.innerHTML = `<th colspan="${employees.length + 1}">${title}</th>`;
+        metrics.forEach(([label, value, hint, className]) => {
+            const row = body.insertRow();
+            if (className) row.className = `metric-${className}`;
+            row.innerHTML = `<th scope="row">${label}${hint ? `<small>${hint}</small>` : ""}</th>` +
+                employees.map(item => `<td>${escapeHtml(String(value(item)))}</td>`).join("");
+        });
+    });
+    if (interactive) {
+        body.insertRow().innerHTML = '<th scope="row">Детализация заявок</th>' + employees.map(item =>
+            `<td><button type="button" class="small-button view-tickets-btn" data-employee="${escapeHtml(item.employee)}">Посмотреть</button></td>`).join("");
+    }
+}
+
+function buildTicketReportPdfElement(employees = ticketAnalysisResult, pageIndex = 0, pageCount = 1) {
     const totals = getTicketReportTotals();
-    const exportRoot = document.createElement("div");
-    exportRoot.className = "pdf-export-root pdf-report-export";
-
-    const evaluatedOverduePercent = totals.deadlineEvaluated > 0 ? totals.overdue / totals.deadlineEvaluated : null;
-    const header = document.createElement("div");
-    header.className = "pdf-report-header";
-    header.innerHTML = `
-        <h1>\u041E\u0442\u0447\u0451\u0442 \u043F\u043E \u0437\u0430\u044F\u0432\u043A\u0430\u043C</h1>
-        <p><b>\u041F\u0435\u0440\u0438\u043E\u0434:</b> ${escapeHtml(getReportPeriodLabel())}</p>
-        <p><b>\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A:</b> ${escapeHtml(getReportSourceLabel())}</p>
+    const root = document.createElement("div");
+    root.className = "pdf-export-root pdf-report-export pdf-matrix-page";
+    const overdue = totals.deadlineEvaluated > 0 ? totals.overdue / totals.deadlineEvaluated : null;
+    root.innerHTML = `
+        <div class="pdf-report-header">
+            <div class="pdf-eyebrow">TIME EXTRACTOR / АНАЛИТИКА ПОДДЕРЖКИ</div>
+            <h1>Отчёт по тикетам 2-й линии</h1>
+            <p><b>${escapeHtml(getReportPeriodLabel())}</b> · ${escapeHtml(getReportSourceLabel())}</p>
+        </div>
+        <div class="pdf-summary-grid">
+            <div><span>Завершено заявок</span><b>${totals.completed}</b></div>
+            <div><span>Сотрудников</span><b>${ticketAnalysisResult.length}</b></div>
+            <div><span>Время по нормативу</span><b>${escapeHtml(formatDuration(totals.standardMs))}</b></div>
+            <div><span>Доля просроченных</span><b>${escapeHtml(formatPercent(overdue))}</b></div>
+        </div>
+        <h2>Показатели по сотрудникам</h2>
+        <p class="pdf-page-caption">${pageCount > 1 ? `Сотрудники ${pageIndex * 4 + 1}–${pageIndex * 4 + employees.length} из ${ticketAnalysisResult.length}. ` : ""}Общие показатели сверху — по всей выборке.</p>
     `;
-    exportRoot.appendChild(header);
-
-    const summary = document.createElement("div");
-    summary.className = "pdf-summary-grid";
-    summary.innerHTML = `
-        <div><span>\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u0442\u0438\u043A\u0435\u0442\u043E\u0432</span><b>${totals.completed}</b></div>
-        <div><span>\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0435\u0439</span><b>${ticketAnalysisResult.length}</b></div>
-        <div><span>\u041E\u0431\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F \u0442\u0438\u043A\u0435\u0442\u043E\u0432</span><b>${escapeHtml(formatDuration(totals.lifecycleMs))}</b></div>
-        <div><span>\u0412\u0440\u0435\u043C\u044F \u043F\u043E \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u0443</span><b>${escapeHtml(formatDuration(totals.standardMs))}</b></div>
-        <div><span>\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E</span><b>${escapeHtml(formatPercent(evaluatedOverduePercent))}</b></div>
-    `;
-    exportRoot.appendChild(summary);
-
-    const sectionTitle = document.createElement("h2");
-    sectionTitle.textContent = "\u0421\u0432\u043E\u0434\u043A\u0430 \u043F\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F\u043C";
-    exportRoot.appendChild(sectionTitle);
-
     const table = document.createElement("table");
     table.className = "pdf-report-table";
-    table.innerHTML = `
-        <thead><tr>
-            <th>\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C</th>
-            <th>\u0422\u0438\u043A\u0435\u0442\u043E\u0432</th>
-            <th>\u041D\u043E\u0432\u0430\u044F - \u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430</th>
-            <th>\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C</th>
-            <th>\u041D\u043E\u0440\u043C\u0430\u0442\u0438\u0432</th>
-            <th>\u0420\u0430\u0431. \u0434\u043D\u0435\u0439</th>
-            <th>\u041D\u043E\u0440\u043C\u0430 \u0447\u0430\u0441\u043E\u0432</th>
-            <th>\u0424\u0430\u043A\u0442. \u0447\u0430\u0441\u043E\u0432</th>
-            <th>% \u043D\u0430 \u0442\u0438\u043A\u0435\u0442\u044B</th>
-            <th>\u0421 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u043E\u043C</th>
-            <th>\u0412 \u0441\u0440\u043E\u043A</th>
-            <th>\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E</th>
-            <th>% \u043F\u0440\u043E\u0441\u0440\u043E\u0447.</th>
-        </tr></thead>
-        <tbody></tbody>
-    `;
-    const tbody = table.querySelector("tbody");
-    ticketAnalysisResult.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${escapeHtml(item.employee)}</td>
-            <td>${item.completedCount}</td>
-            <td>${escapeHtml(formatDuration(item.lifecycleMs))}</td>
-            <td>${escapeHtml(formatDuration(item.actualMs))}</td>
-            <td>${escapeHtml(formatDuration(item.standardMs))}</td>
-            <td>${item.workDays}</td>
-            <td>${escapeHtml(formatHoursNumber(item.productionNormHours))}</td>
-            <td>${escapeHtml(formatHoursNumber(item.workedHours))}</td>
-            <td>${escapeHtml(formatPercent(item.utilizationPercent))}</td>
-            <td>${item.deadlineCount}</td>
-            <td>${item.onTimeCount}</td>
-            <td>${item.overdueCount}</td>
-            <td>${escapeHtml(formatPercent(item.overduePercent))}</td>
-        `;
-        tbody.appendChild(row);
-    });
-    exportRoot.appendChild(table);
-
-    const calculationNote = document.createElement("p");
-    calculationNote.className = "pdf-calculation-note";
-    calculationNote.textContent = "\u041F\u0440\u043E\u0446\u0435\u043D\u0442 \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043D\u0430 \u0442\u0438\u043A\u0435\u0442\u044B = \u0441\u0443\u043C\u043C\u0430 \u043D\u043E\u0440\u043C\u0430\u0442\u0438\u0432\u043E\u0432 \u043F\u043E \u0442\u0435\u043C\u0430\u0442\u0438\u043A\u0430\u043C / \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\u0435 \u0447\u0430\u0441\u044B. \u041F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u044B\u0445 = \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u044B\u0435 / \u0437\u0430\u044F\u0432\u043A\u0438 \u0441 \u043E\u0446\u0435\u043D\u0451\u043D\u043D\u044B\u043C \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u043E\u043C.";
-    exportRoot.appendChild(calculationNote);
-
-    return exportRoot;
+    fillTicketMetricTable(table, employees);
+    root.appendChild(table);
+    const note = document.createElement("div");
+    note.className = "pdf-calculation-note";
+    note.innerHTML = '<b>Как читать отчёт</b><br>Время по нормативу — расчётная оценка по тематикам, а не измеренное время работы. Доля времени на заявки = нормативное время / фактически отработанные часы. Доля просроченных = просроченные / заявки с оценённым дедлайном. «—» означает, что долю рассчитать нельзя.';
+    root.appendChild(note);
+    return root;
 }
 
 function buildTicketsPdfHeaderElement(context) {
@@ -2653,6 +2628,16 @@ async function renderPdfElementToCanvas(element, host) {
     host.replaceChildren(element);
     await waitForPdfLayout();
 
+    await document.fonts.ready;
+    await Promise.all(Array.from(element.querySelectorAll("img")).map(img =>
+        img.decode ? img.decode().catch(() => {}) : Promise.resolve()));
+    [element, ...element.querySelectorAll("*")].forEach(node => {
+        const computed = window.getComputedStyle(node);
+        const declarations = Array.from(computed, property =>
+            [property, computed.getPropertyValue(property)]);
+        declarations.forEach(([property, value]) => node.style.setProperty(property, value));
+    });
+
     const rect = element.getBoundingClientRect();
     if (rect.width < 10 || rect.height < 10) {
         throw new Error("\u041F\u0435\u0447\u0430\u0442\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0438\u043C\u0435\u0435\u0442 \u043D\u0443\u043B\u0435\u0432\u043E\u0439 \u0440\u0430\u0437\u043C\u0435\u0440.");
@@ -2696,7 +2681,7 @@ function addCanvasToPdf(pdf, canvas, state, options = {}) {
         const fittedWidth = canvas.width * scale;
         const fittedHeight = canvas.height * scale;
         const x = (pageWidth - fittedWidth) / 2;
-        const y = (pageHeight - fittedHeight) / 2;
+        const y = options.alignTop ? state.margin : (pageHeight - fittedHeight) / 2;
         pdf.addImage(canvas.toDataURL("image/jpeg", 0.94), "JPEG", x, y, fittedWidth, fittedHeight, undefined, "FAST");
         state.y = pageHeight - state.margin;
         state.hasPageContent = true;
@@ -2758,12 +2743,17 @@ async function exportTicketReportPdf() {
         await waitForPdfLayout();
 
         const JsPdf = getJsPdfConstructor();
-        const pdf = new JsPdf({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
+        const pdf = new JsPdf({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
         const state = { margin: 8, y: 8, hasPageContent: false };
         host = createPdfRenderHost(1500);
 
-        const reportCanvas = await renderPdfElementToCanvas(buildTicketReportPdfElement(), host);
-        addCanvasToPdf(pdf, reportCanvas, state);
+        const pageCount = Math.ceil(ticketAnalysisResult.length / 4);
+        for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+            const employees = ticketAnalysisResult.slice(pageIndex * 4, pageIndex * 4 + 4);
+            const reportCanvas = await renderPdfElementToCanvas(
+                buildTicketReportPdfElement(employees, pageIndex, pageCount), host);
+            addCanvasToPdf(pdf, reportCanvas, state, { forceNewPage: true, fitSinglePage: true, alignTop: true });
+        }
 
         for (const definition of TICKET_CHART_DEFINITIONS) {
             const chartCard = cloneTicketChartCardForPdf(definition);
@@ -2772,6 +2762,9 @@ async function exportTicketReportPdf() {
             chartPage.className = "pdf-export-root pdf-report-export pdf-chart-page";
             chartPage.appendChild(chartCard);
             const chartCanvas = await renderPdfElementToCanvas(chartPage, host);
+            pdf.addPage("a4", "landscape");
+            state.hasPageContent = false;
+            state.y = state.margin;
             addCanvasToPdf(pdf, chartCanvas, state, { forceNewPage: true, fitSinglePage: true });
         }
 
