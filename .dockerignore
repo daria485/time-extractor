@@ -1,0 +1,11 @@
+**
+!Dockerfile
+!.dockerignore
+!docker-server.js
+!index.html
+!app.js
+!style.css
+!tickets.js
+!xlsx.full.min.js
+!XLSX-LICENSE.txt
+
